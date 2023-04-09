@@ -10,7 +10,7 @@ The answer to this question is that we have to create a buffer and ask the GPU t
 of the image to the buffer.
 
 > **Note**: You can find the [full source code of this section
-> here](https://github.com/vulkano-rs/vulkano-book/blob/master/chapter_code/src/bin/images/image_clear.rs).
+> here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter_code/src/bin/images/image_clear.rs).
 
 ## Copying from the image to the buffer
 

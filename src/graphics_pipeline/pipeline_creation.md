@@ -13,7 +13,7 @@ and a *framebuffer* that contains the target image.
 It is now time to put everything together and perform the draw operation!
 
 > **Note**: You can find the [full source code of this chapter
-> here](https://github.com/vulkano-rs/vulkano-book/blob/master/chapter_code/src/bin/graphics_pipeline.rs).
+> here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter_code/src/bin/graphics_pipeline.rs).
 
 ## Creating a graphics pipeline
 
@@ -94,7 +94,7 @@ let pipeline = GraphicsPipeline::start()
 
 When we draw, we have the possibility to draw only to a specific rectangle of the screen called a
 ***viewport***. The borders of the viewport will map to the `-1.0` and `1.0` logical coordinates 
-that we covered in [the vertex input section of the guide](/guide/vertex-input). Any part of the 
+that we covered in [the vertex input section of the guide](vertex_shader.html). Any part of the 
 shape that ends up outside of this rectangle will be discarded.
 
 The state `ViewportState::viewport_fixed_scissor_irrelevant()` configures the builder so that we 

@@ -78,7 +78,7 @@ layout(set = 0, binding = 0) buffer Data {
 ```
 
 This declares a *descriptor*, which we are going to cover in more details [in the next
-section](/guide/descriptor-sets). In particular, we declare a buffer whose name is `buf` and that
+section](descriptor_sets.html). In particular, we declare a buffer whose name is `buf` and that
 we are going to access in our code.
 
 The content of the buffer is an unsized array of `uint`s. A `uint` is always similar to a `u32`

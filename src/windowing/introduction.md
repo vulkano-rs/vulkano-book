@@ -8,7 +8,7 @@ Strictly speaking, creating a window and handling events is **not** covered by v
 however, is capable of rendering to window(s).
 
 > **Note**: You can find the [full source code of this chapter
-> here](https://github.com/vulkano-rs/vulkano-book/blob/master/chapter_code/src/bin/windowing.rs).
+> here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter_code/src/bin/windowing.rs).
 
 ## Creating a window
 

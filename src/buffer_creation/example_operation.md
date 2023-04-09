@@ -7,7 +7,7 @@ What we are going to ask in this example is very simple: we will ask it to copy 
 buffer to another.
 
 > **Note**: You can find the [full source code of this chapter
-> here](https://github.com/vulkano-rs/vulkano-book/blob/master/chapter_code/src/bin/buffer_creation.rs).
+> here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter_code/src/bin/buffer_creation.rs).
 
 ## Creating the buffers
 
@@ -174,7 +174,7 @@ let future = sync::now(device.clone())
 ```
 
 Signaling a fence returns a future object called
-[`FenceSignalFuture`](https://docs.rs/vulkano/0.33.0/vulkano/sync/struct.FenceSignalFuture.html),
+[`FenceSignalFuture`](https://docs.rs/vulkano/0.33.0/vulkano/sync/future/struct.FenceSignalFuture.html),
 that has a special method `.wait()`:
 
 ```rust

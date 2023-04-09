@@ -10,7 +10,7 @@ macro, as explained in that section. Each invocation of the `main` function of t
 write one pixel.
 
 > **Note**: You can find the [full source code of this section
-> here](https://github.com/vulkano-rs/vulkano-book/blob/master/chapter_code/src/bin/images/mandelbrot.rs).
+> here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter_code/src/bin/images/mandelbrot.rs).
 
 ## The shader
 
@@ -120,7 +120,7 @@ their parameters into respectively a `vec4`, a `vec3` and a `ivec2`.
 `vec3(i)` is a shortcut for `vec3(i, i, i)`.
 
 Writing the pixel of an image must be done with the `imageStore` function. As explained in [a
-previous section](/guide/image_clear) the content of the image is opaque and is always treated as
+previous section](image_clear.html) the content of the image is opaque and is always treated as
 floating-points, even though we know that its memory contains integers.
 
 ## Calling this shader
