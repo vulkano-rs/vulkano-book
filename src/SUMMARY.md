@@ -1,6 +1,11 @@
 # Summary
 
-[Introduction](introduction/introduction.md)
+[About](about.md)
+
+-----------
+
+# The Guide
+  - [Introduction](introduction/introduction.md)
 
 # Initialization
   - [Intialization](initialization/initialization.md)
@@ -34,3 +39,7 @@
   - [Swapchain creation](windowing/swapchain_creation.md)
   - [Other initialization](windowing/other_initialization.md)
   - [Event Handling: Acquiring and presenting](windowing/event_handling.md)
+
+-----------
+
+[Contributors](contributors.md)
