@@ -19,7 +19,7 @@ that are updated continuously to match changes that are unreleased. You should o
 branch if you are using vulkano as a git dependency.
 
 To contribute to this guide, you can create a pull request at 
-[vulkano-www](https://github.com/vulkano-rs/vulkano-book) repository.
+[vulkano-book](https://github.com/vulkano-rs/vulkano-book) repository.
 
 ## Quick glossary
 
