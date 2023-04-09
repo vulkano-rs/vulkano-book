@@ -1,9 +1,5 @@
 # Safe Rust wrapper around the Vulkan API
 
-Vulkano is a Rust wrapper around the Vulkan graphics API. It follows the Rust philosophy, which is that as long as you don't use unsafe code you shouldn't be able to trigger any undefined behavior. In the case of Vulkan, this means that non-unsafe code should always conform to valid API usage.
-
-What does vulkano do?
-
 Vulkano is a Rust wrapper around [the Vulkan graphics API](https://www.khronos.org/vulkan/).
 It follows the Rust philosophy, which is that as long as you don't use unsafe code you shouldn't
 be able to trigger any undefined behavior. In the case of Vulkan, this means that non-unsafe code
