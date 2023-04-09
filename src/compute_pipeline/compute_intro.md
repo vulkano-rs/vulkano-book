@@ -18,11 +18,11 @@ by one, a GPU can perform it on multiple values at once.
 
 > **Note**: See also [SIMD](https://en.wikipedia.org/wiki/SIMD).
 
-> **Note**: In [a previous section](/guide/device-creation) we talked about *queues*. These queues
+> **Note**: In [a previous section](../initialization/device-creation.html) we talked about *queues*. These queues
 > are usually foremost *software* queues, and not actual hardware constructs.
 
 > **Note**: You can find the [full source code of this chapter
-> here](https://github.com/vulkano-rs/vulkano-www/blob/master/chapter_code/src/bin/compute_pipeline.rs).
+> here](https://github.com/vulkano-rs/vulkano-book/blob/master/chapter_code/src/bin/compute_pipeline.rs).
 
 ## Usability
 
@@ -80,5 +80,5 @@ perform the calculation on each element.
 Although notice that we're using `STORAGE_BUFFER` usage this time, since the buffer will be used
 in the compute shader.
 
-[The next section of the guide](/guide/compute-pipeline) will indicate how to actually code this
+[The next section of the guide](compute_pipeline.html) will indicate how to actually code this
 operation.

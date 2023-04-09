@@ -188,4 +188,4 @@ let compute_pipeline = ComputePipeline::new(
 ```
 
 Before invoking that compute pipeline, we need to bind a buffer to it. This is covered by [the
-next section](/guide/descriptor-sets).
+next section](descriptor_sets.html).

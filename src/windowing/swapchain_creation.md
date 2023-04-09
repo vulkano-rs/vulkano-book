@@ -243,4 +243,4 @@ freedom to the image queue.
 For additional information, check the
 [swapchain documentation](https://docs.rs/vulkano/0.33.0/vulkano/swapchain/index.html#swapchains).
 
-Next: [Other initialization](/guide/windowing/other-initialization)
+Next: [Other initialization](other_initialization.html)

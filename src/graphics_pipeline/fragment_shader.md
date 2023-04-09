@@ -39,4 +39,4 @@ section](/guide/image-clear) these values are normalized, in other words the val
 reality write `255` in memory. In this example since our target image contains colors, we write the
 color red.
 
-Next: [Render passes and framebuffers](render-pass-framebuffer)
+Next: [Render passes and framebuffers](render_pass_framebuffer.html)

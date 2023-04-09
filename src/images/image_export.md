@@ -1,6 +1,6 @@
 # Exporting the content of an image
 
-In [the previous section](/guide/image-clear) we filled the image with a color.
+In [the previous section](image_clear.html) we filled the image with a color.
 
 But you may now wonder how to see the result of this operation. As explained previously, images
 are opaque structures whose actual layout is implementation-specific. So how do we read their
@@ -10,7 +10,7 @@ The answer to this question is that we have to create a buffer and ask the GPU t
 of the image to the buffer.
 
 > **Note**: You can find the [full source code of this section
-> here](https://github.com/vulkano-rs/vulkano-www/blob/master/chapter_code/src/bin/images/image_clear.rs).
+> here](https://github.com/vulkano-rs/vulkano-book/blob/master/chapter_code/src/bin/images/image_clear.rs).
 
 ## Copying from the image to the buffer
 
@@ -111,4 +111,4 @@ This might look stupid, but think about the fact that it's the GPU that wrote th
 the image. In the next sections we will do more than just fill an image with blue, but we will
 continue to retrieve the image's content and write it to a PNG file.
 
-Next: [Drawing a fractal with a compute shader](/guide/mandelbrot)
+Next: [Drawing a fractal with a compute shader](mandelbrot.html)

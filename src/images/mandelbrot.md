@@ -4,13 +4,13 @@ This section isn't going to introduce any new concept, but will show a real worl
 a compute shader to write a [Mandelbrot set](https://en.wikipedia.org/wiki/Mandelbrot_set) to an
 image.
 
-Just like in [the introduction to compute pipelines](/guide/compute-pipeline), we need to write
+Just like in [the introduction to compute pipelines](../compute_pipeline/compute_pipeline.html), we need to write
 some GLSL code and create a compute pipeline. This is done with the `vulkano_shader::shader!` 
 macro, as explained in that section. Each invocation of the `main` function of the shader will 
 write one pixel.
 
 > **Note**: You can find the [full source code of this section
-> here](https://github.com/vulkano-rs/vulkano-www/blob/master/chapter_code/src/bin/images/mandelbrot.rs).
+> here](https://github.com/vulkano-rs/vulkano-book/blob/master/chapter_code/src/bin/images/mandelbrot.rs).
 
 ## The shader
 
@@ -154,7 +154,7 @@ let view = ImageView::new_default(image.clone()).unwrap();
 ```
 
 Now, let's create the descriptor set by adding the image view, like we did 
-[earlier](/guide/descriptor-sets):
+[earlier](../compute_pipeline/descriptor_sets.html):
 
 ```rust
 let layout = compute_pipeline.layout().set_layouts().get(0).unwrap();
@@ -211,7 +211,7 @@ builder
 let command_buffer = builder.build().unwrap();
 ```
 
-And finally just like in [the previous section](/guide/image-export) we execute the command buffer
+And finally just like in [the previous section](image_export.html) we execute the command buffer
 and export the image as a PNG file:
 
 ```rust
@@ -236,4 +236,4 @@ And here is what you should get:
 <img src="/guide-mandelbrot-1.png" />
 </center>
 
-Next: [Graphics pipeline introduction](/guide/what-graphics-pipeline)
+Next: [Graphics pipeline introduction](../graphics_pipeline/introduction.html)

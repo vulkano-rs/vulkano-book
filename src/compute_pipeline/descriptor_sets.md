@@ -69,7 +69,7 @@ particular pipeline.
 We then bind each descriptor one by one in order, which here is just the `buf` variable. Just like
 for `compute_pipeline`, cloning `data_buffer` only clones an `Arc` and isn't expensive.
 
-> **Note**: `data_buffer` was created in [the introduction](/guide/compute-intro).
+> **Note**: `data_buffer` was created in [the introduction](compute_intro.html).
 
 Now that we have a compute pipeline and a descriptor set to bind to it, we can start our operation.
-This is covered in [the next section](/guide/dispatch).
+This is covered in [the next section](dispatch.html).

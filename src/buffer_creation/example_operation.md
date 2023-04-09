@@ -7,12 +7,12 @@ What we are going to ask in this example is very simple: we will ask it to copy 
 buffer to another.
 
 > **Note**: You can find the [full source code of this chapter
-> here](https://github.com/vulkano-rs/vulkano-www/blob/master/chapter_code/src/bin/buffer_creation.rs).
+> here](https://github.com/vulkano-rs/vulkano-book/blob/master/chapter_code/src/bin/buffer_creation.rs).
 
 ## Creating the buffers
 
 The first step is to create two CPU-accessible buffers: the source and the destination. This was 
-covered in [the previous section](/guide/buffer-creation).
+covered in [the previous section](buffer_creation.html).
 
 ```rust
 let source_content: Vec<i32> = (0..64).collect();
@@ -57,7 +57,7 @@ Just like buffers, you need an allocator to allocate several command buffers, bu
 a memory allocator. You have to use a [command buffer 
 allocator](https://docs.rs/vulkano/0.33.0/vulkano/command_buffer/allocator/trait.CommandBufferAllocator.html).
 In this case we just use the [standard 
-one](https://docs.rs/vulkano/0.32.0/vulkano/command_buffer/allocator/struct.StandardCommandBufferAllocator.html).
+one](https://docs.rs/vulkano/0.33.0/vulkano/command_buffer/allocator/struct.StandardCommandBufferAllocator.html).
 
 ```rust
 use vulkano::command_buffer::allocator::{
@@ -116,7 +116,7 @@ let command_buffer = builder.build().unwrap();
 
 As you can see, it is very straight-forward. We create a *builder*, add a copy command to it with
 `copy_buffer`, then turn that builder into an actual command buffer with `.build()`. Like we saw in
-[the buffers creation section](/guide/buffer-creation), we call `.clone()` multiple times, but we
+[the buffers creation section](buffer_creation.html), we call `.clone()` multiple times, but we
 only clone `Arc`s.
 
 One thing to notice is that the `AutoCommandBufferBuilder::primary()` method takes as parameter a 
@@ -153,7 +153,7 @@ make an operation start only after a previous one is finished, while reducing th
 communication operations between the CPU and the GPU.
 
 After submitting the command buffer, we might be tempted to try to read the content of the
-`destination` buffer as demonstrated in [the previous section](/guide/buffer-creation).
+`destination` buffer as demonstrated in [the previous section](buffer_creation.html).
 However, because the CPU and GPU are now executing in parallel, calling `destination.read()`
 now may sometimes return an error because the buffer could still be in use by the GPU.
 
@@ -191,4 +191,4 @@ assert_eq!(&*src_content, &*destination_content);
 println!("Everything succeeded!");
 ```
 
-Next: [Introduction to compute operations](/guide/compute-intro)
+Next: [Introduction to compute operations](../compute_pipeline/compute_intro.html)

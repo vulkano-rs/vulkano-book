@@ -19,7 +19,7 @@ that are updated continuously to match changes that are unreleased. You should o
 branch if you are using vulkano as a git dependency.
 
 To contribute to this guide, you can create a pull request at 
-[vulkano-www](https://github.com/vulkano-rs/vulkano-www) repository.
+[vulkano-www](https://github.com/vulkano-rs/vulkano-book) repository.
 
 ## Quick glossary
 
@@ -61,7 +61,7 @@ opt-level = 1
 ```
 
 Note: If you run into any issues with this guide, please [open an 
-issue](https://github.com/vulkano-rs/vulkano-www/issues). If you have issues with vulkano itself, 
+issue](https://github.com/vulkano-rs/vulkano-book/issues). If you have issues with vulkano itself, 
 please also [open an issue](https://github.com/vulkano-rs/vulkano/issues).
 
-You are now ready to [get started](/guide/initialization)!
+You are now ready to [get started](../initialization/initialization.html)!

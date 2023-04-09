@@ -1,19 +1,19 @@
 # Putting it all together
 
-In [the vertex input section](/guide/vertex-input) we created a buffer named `vertex_buffer` which
+In [the vertex input section](vertex_shader.html) we created a buffer named `vertex_buffer` which
 contains the shape of our triangle, and wrote the source code of a *vertex shader* that positions
 vertices on the image.
 
-In [the fragment shader section](/guide/fragment-shader) we wrote the source code of a
+In [the fragment shader section](fragment_shader.html) we wrote the source code of a
 *fragment shader* that fills pixels with a color.
 
-Finally in [the render passes section](/guide/render-pass-framebuffer) we create a *render pass*
+Finally in [the render passes section](render_pass_framebuffer.html) we create a *render pass*
 and a *framebuffer* that contains the target image.
 
 It is now time to put everything together and perform the draw operation!
 
 > **Note**: You can find the [full source code of this chapter
-> here](https://github.com/vulkano-rs/vulkano-www/blob/master/chapter_code/src/bin/graphics_pipeline.rs).
+> here](https://github.com/vulkano-rs/vulkano-book/blob/master/chapter_code/src/bin/graphics_pipeline.rs).
 
 ## Creating a graphics pipeline
 
@@ -155,7 +155,7 @@ instancing (we won't cover that here).
 > `draw()` multiple time in a row.
 
 Once we have finished drawing, let's do the same thing as [in the mandelbrot
-example](/guide/mandelbrot) and write the image to a PNG file.
+example](../images/mandelbrot.html) and write the image to a PNG file.
 
 To do that, as before, let's first create the buffer:
 
@@ -207,4 +207,4 @@ And here is what you should get:
 <img src="/guide-graphics-pipeline-creation-1.png" />
 </center>
 
-Next: [Windowing](/guide/windowing/introduction)
+Next: [Windowing](../windowing/introduction.html)

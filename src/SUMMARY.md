@@ -10,7 +10,7 @@
   - [Creating a buffer](buffer_creation/buffer_creation.md)
   - [Example operation](buffer_creation/example_operation.md)
 
-# Compute pipleine
+# Compute pipeline
   - [Introduction to compute operations](compute_pipeline/compute_intro.md)
   - [Compute pipelines](compute_pipeline/compute_pipeline.md)
   - [Descriptor sets](compute_pipeline/descriptor_sets.md)

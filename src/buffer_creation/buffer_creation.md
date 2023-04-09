@@ -185,4 +185,4 @@ Just like the constructors, keep in mind that being able to read/write the conte
 like this is specific to buffer allocated in CPU-accessible memory. Device-local buffers cannot
 be accessed in this way.
 
-Next: [Example operation](/guide/example-operation)
+Next: [Example operation](example_operation.html)

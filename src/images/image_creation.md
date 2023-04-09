@@ -1,6 +1,6 @@
 # Creating an image
 
-In [the buffers creation section of the guide](/guide/buffer-creation) we saw that in order for
+In [the buffers creation section of the guide](../buffer_creation/buffer_creation.html) we saw that in order for
 the GPU to access data we had to put it in a *buffer*.
 This is not exactly true, as there is an alternative which are ***images***.
 
@@ -85,4 +85,4 @@ image.
 > **Note**: Images can be made of layers, but for this example we only have one layer. Also, images 
 > have usage flags similar to buffers, but this precise constructor doesn't require them.
 
-Next: [Clearing an image](/guide/image-clear)
+Next: [Clearing an image](image_clear.html)

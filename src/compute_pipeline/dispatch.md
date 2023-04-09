@@ -4,7 +4,7 @@ Now that we have all the needed ingredients, we can create the command buffer th
 our compute pipeline. This is called a *dispatch* operation.
 
 Creating a command buffer is similar to [the example operation in a previous
-section](/guide/example-operation).
+section](../buffer_creation/example_operation.html).
 
 ```rust
 use vulkano::command_buffer::allocator::{
@@ -46,7 +46,7 @@ and the descriptor sets we are going to use. Here the number of sets could have 
 in which case we would indicate our desired one with an index. Because we only have one, the index 
 is 0.
 
-As explained in [the compute pipeline section](/guide/compute-pipeline), we want to spawn 1024
+As explained in [the compute pipeline section](compute_pipeline.html), we want to spawn 1024
 *work groups*. This value is indicated by the actual `.dispatch()` method.
 
 Just like we already covered, we submit the command buffer:
@@ -77,4 +77,4 @@ for (n, val) in content.iter().enumerate() {
 println!("Everything succeeded!");
 ```
 
-Next: [Creating an image](/guide/image-creation)
+Next: [Creating an image](../images/image_creation.html)
