@@ -204,7 +204,7 @@ println!("Everything succeeded!");
 And here is what you should get:
 
 <center>
-<img src="/guide-graphics-pipeline-creation-1.png" />
+<img src="guide-graphics-pipeline-creation-1.png" />
 </center>
 
 Next: [Windowing](../windowing/introduction.html)

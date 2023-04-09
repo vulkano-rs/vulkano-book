@@ -233,7 +233,7 @@ println!("Everything succeeded!");
 And here is what you should get:
 
 <center>
-<img src="/guide-mandelbrot-1.png" />
+<img src="guide-mandelbrot-1.png" />
 </center>
 
 Next: [Graphics pipeline introduction](../graphics_pipeline/introduction.html)

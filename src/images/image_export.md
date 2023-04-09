@@ -102,7 +102,7 @@ println!("Everything succeeded!");
 And that's it! When running your program, a blue image named `image.png` should appear.
 
 <center>
-<img src="/guide-image-export-1.png" />
+<img src="guide-image-export-1.png" />
 
 *Here it is.*
 </center>

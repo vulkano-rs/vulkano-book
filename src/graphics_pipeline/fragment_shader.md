@@ -8,7 +8,7 @@ modified on the final image.
 > GPU considers that the whole pixel is inside.
 
 <center>
-    <object data='/guide-fragment-shader-1.svg'
+    <object data='guide-fragment-shader-1.svg'
             alt='Illustration of which pixels are inside the triangle'>
     </object>
 </center>

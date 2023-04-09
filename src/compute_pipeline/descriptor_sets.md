@@ -25,7 +25,7 @@ What we declared in the GLSL code is actually not a descriptor set, but only a s
 descriptor set. Before we can invoke the compute pipeline, we first need to bind an actual
 descriptor set to that slot.
 
-<div style="text-align: center;"><object data="/guide-descriptor-sets-1.svg"></object></div>
+<div style="text-align: center;"><object data="guide-descriptor-sets-1.svg"></object></div>
 
 ## Creating a descriptor set
 

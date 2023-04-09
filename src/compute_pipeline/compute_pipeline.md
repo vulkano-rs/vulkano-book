@@ -10,7 +10,7 @@ This is done in two steps:
 - At runtime, we pass this *SPIR-V* to the Vulkan implementation (GPU driver), which in turn 
   converts it into its own implementation-specific format.
 
-<div style="text-align: center;"><object data="/guide-compute-pipeline-1.svg"></object></div>
+<div style="text-align: center;"><object data="guide-compute-pipeline-1.svg"></object></div>
 
 > **Note**: In the very far future it may be possible to write shaders in Rust, or in a
 > domain specific language that resembles Rust.

@@ -35,14 +35,14 @@ image we are drawing to. Being a vectorial renderer, Vulkan doesn't use coordina
 Instead it considers that the image has a width and a height of 2 units (-1.0 to 1.0), and that the
 origin is at the center of the image.
 
-<center><object data="/guide-vertex-input-1.svg"></object></center>
+<center><object data="guide-vertex-input-1.svg"></object></center>
 
 When we give positions to Vulkan, we need to use its coordinate system.
 
 In this guide we are going to draw only a single triangle for now. Let's pick a shape for it,
 for example this one:
 
-<center><object data="/guide-vertex-input-2.svg"></object></center>
+<center><object data="guide-vertex-input-2.svg"></object></center>
 
 Which translates into this code:
 
