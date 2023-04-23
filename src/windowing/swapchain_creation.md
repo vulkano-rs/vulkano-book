@@ -69,7 +69,8 @@ time select the first queue family that is suitable:
             // If none is found, `None` is returned to `filter_map`,
             // which disqualifies this physical device.
             .position(|(i, q)| {
-                q.queue_flags.graphics && p.surface_support(i as u32, &surface).unwrap_or(false)
+                q.queue_flags.contains(QueueFlags::GRAPHICS)
+                        && p.surface_support(i as u32, &surface).unwrap_or(false)
             })
             .map(|q| (p, q as u32))
     })
@@ -123,7 +124,8 @@ fn select_physical_device(
                 // If none is found, `None` is returned to `filter_map`,
                 // which disqualifies this physical device.
                 .position(|(i, q)| {
-                    q.queue_flags.graphics && p.surface_support(i as u32, &surface).unwrap_or(false)
+                    q.queue_flags.contains(QueueFlags::GRAPHICS)
+                        && p.surface_support(i as u32, &surface).unwrap_or(false)
                 })
                 .map(|q| (p, q as u32))
         })
