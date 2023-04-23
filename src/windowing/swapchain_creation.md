@@ -70,7 +70,7 @@ time select the first queue family that is suitable:
             // which disqualifies this physical device.
             .position(|(i, q)| {
                 q.queue_flags.contains(QueueFlags::GRAPHICS)
-                        && p.surface_support(i as u32, &surface).unwrap_or(false)
+                    && p.surface_support(i as u32, &surface).unwrap_or(false)
             })
             .map(|q| (p, q as u32))
     })
