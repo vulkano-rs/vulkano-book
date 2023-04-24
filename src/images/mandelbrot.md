@@ -130,7 +130,7 @@ as seen before:
 
 ```rust
 let image = StorageImage::new(
-    device.clone(),
+    &memory_allocator,
     ImageDimensions::Dim2d {
         width: 1024,
         height: 1024,
@@ -187,7 +187,7 @@ The command buffer contains a dispatch command followed with a copy-image-to-buf
 
 ```rust
 let mut builder = AutoCommandBufferBuilder::primary(
-    device.clone(),
+    &command_buffer_allocator,
     queue.queue_family_index(),
     CommandBufferUsage::OneTimeSubmit,
 )

@@ -117,7 +117,7 @@ To draw the triangle, we need to pass the pipeline, the vertex_buffer and the ac
 
 ```rust
 let mut builder = AutoCommandBufferBuilder::primary(
-    device.clone(),
+    &command_buffer_allocator,
     queue.queue_family_index(),
     CommandBufferUsage::OneTimeSubmit,
 )
@@ -139,7 +139,7 @@ builder
     .draw(
         3, 1, 0, 0, // 3 is the number of vertices, 1 is the number of instances
     )
-    
+
     .unwrap()
     .end_render_pass()
     .unwrap()

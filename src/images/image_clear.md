@@ -5,6 +5,7 @@ is that you can't modify an image by directly writing to its memory. There is no
 `CpuAccessibleImage`.
 
 <!-- todo: Does vulkano support it now?-->
+
 > **Note**: In reality Vulkan also allows you to create *linear* images, which can be modified but
 > are much slower and are supposed to be used only in some limited situations. Vulkano doesn't
 > support them yet.
@@ -18,7 +19,7 @@ use vulkano::command_buffer::ClearColorImageInfo;
 use vulkano::format::ClearColorValue;
 
 let mut builder = AutoCommandBufferBuilder::primary(
-    device.clone(),
+    &command_buffer_allocator,
     queue.queue_family_index(),
     CommandBufferUsage::OneTimeSubmit,
 )

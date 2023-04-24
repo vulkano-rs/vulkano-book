@@ -105,6 +105,7 @@ And that's it! When running your program, a blue image named `image.png` should 
 <img src="guide-image-export-1.png" />
 
 *Here it is.*
+
 </center>
 
 This might look stupid, but think about the fact that it's the GPU that wrote the content of
