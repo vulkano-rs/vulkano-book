@@ -139,7 +139,7 @@ builder
     .draw(
         3, 1, 0, 0, // 3 is the number of vertices, 1 is the number of instances
     )
-    
+
     .unwrap()
     .end_render_pass()
     .unwrap()

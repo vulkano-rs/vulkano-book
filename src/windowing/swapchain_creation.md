@@ -205,7 +205,7 @@ Of all of these properties, we only care about some of them, mainly the dimensio
 transparency (composite alpha), and the format of the images.
 
 ```rust
-let dimensions = surface.window().inner_size();
+let dimensions = window().inner_size();
 let composite_alpha = caps.supported_composite_alpha.iter().next().unwrap();
 let image_format = Some(
     physical_device
@@ -228,10 +228,7 @@ let (swapchain, images) = Swapchain::new(
         min_image_count: caps.min_image_count + 1, // How many buffers to use in the swapchain
         image_format,
         image_extent: dimensions.into(),
-        image_usage: ImageUsage {
-            color_attachment: true,  // What the images are going to be used for
-            ..Default::default()
-        },
+        image_usage: ImageUsage::COLOR_ATTACHMENT, // What the images are going to be used for
         composite_alpha,
         ..Default::default()
     },
