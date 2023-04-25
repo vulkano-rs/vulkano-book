@@ -45,7 +45,7 @@ The simplest way to create a buffer is to create it in CPU-accessible memory, by
 
 ```rust
 use vulkano::buffer::{Buffer, BufferCreateInfo, BufferUsage};
-use vulkano::memory::allocator::AllocationCreateInfo;
+use vulkano::memory::allocator::{AllocationCreateInfo, MemoryUsage};
 
 let data: i32 = 12;
 let buffer = Buffer::from_data(
