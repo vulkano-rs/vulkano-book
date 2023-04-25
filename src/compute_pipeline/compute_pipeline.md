@@ -127,6 +127,7 @@ To use `vulkano-shaders`, we first have to add a dependency:
 # Notice that it uses the same version as vulkano
 vulkano-shaders = "0.33.0"
 ```
+
 > **Note**: `vulkano-shaders` uses the crate `shaderc-sys` for the actual GLSL compilation step. 
 > When you build your project, an attempt will be made to automatically install shaderc if you 
 > don't already have it. shaderc also comes in [the Vulkan 
@@ -141,7 +142,7 @@ mod cs {
     vulkano_shaders::shader!{
         ty: "compute",
         src: r"
-            #version 460
+            ##version 460
 
             layout(local_size_x = 64, local_size_y = 1, local_size_z = 1) in;
 

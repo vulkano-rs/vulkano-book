@@ -84,7 +84,7 @@ mod vs {
     vulkano_shaders::shader! {
         ty: "vertex",
         src: "
-            #version 460
+            ##version 460
 
             layout(location = 0) in vec2 position;
 
@@ -99,7 +99,7 @@ mod fs {
     vulkano_shaders::shader! {
         ty: "fragment",
         src: "
-            #version 460
+            ##version 460
 
             layout(location = 0) out vec4 f_color;
 
@@ -140,7 +140,7 @@ fn main() {
 
     let vs = vs::load(device.clone()).expect("failed to create shader module");
     let fs = fs::load(device.clone()).expect("failed to create shader module");
-    
+
     // crop
 }
 ```
