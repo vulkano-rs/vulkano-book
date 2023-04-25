@@ -12,6 +12,7 @@ There are various hardcoded formats that the pixels of an image can use.
 
 *Example: the various images used by a Vulkan-using<br />
 application, as seen from a debugger*
+
 </center>
 
 We often use Vulkan images to store *images* in the common sense of the word, in which case each
@@ -66,7 +67,7 @@ use vulkano::image::{ImageDimensions, StorageImage};
 use vulkano::format::Format;
 
 let image = StorageImage::new(
-    device.clone(),
+    &memory_allocator,
     ImageDimensions::Dim2d {
         width: 1024,
         height: 1024,
