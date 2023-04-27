@@ -42,7 +42,7 @@ use vulkano::image::SwapchainImage;
 use vulkano::render_pass::{Framebuffer, FramebufferCreateInfo};
 
 fn get_framebuffers(
-    images: &[Arc<SwapchainImage<Window>>],
+    images: &[Arc<SwapchainImage>],
     render_pass: &Arc<RenderPass>,
 ) -> Vec<Arc<Framebuffer>> {
     images
