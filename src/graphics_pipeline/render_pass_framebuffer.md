@@ -101,7 +101,7 @@ As a demonstration, let's just enter a render pass and leave it immediately afte
 use vulkano::command_buffer::{RenderPassBeginInfo, SubpassContents};
 
 let mut builder = AutoCommandBufferBuilder::primary(
-    device.clone(),
+    &command_buffer_allocator,
     queue.queue_family_index(),
     CommandBufferUsage::OneTimeSubmit,
 )

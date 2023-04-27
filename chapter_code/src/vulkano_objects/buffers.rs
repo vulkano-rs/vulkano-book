@@ -249,7 +249,7 @@ where
             let buffer = Buffer::from_data(
                 &allocators.memory,
                 BufferCreateInfo {
-                    usage: BufferUsage::INDEX_BUFFER,
+                    usage: BufferUsage::UNIFORM_BUFFER,
                     ..Default::default()
                 },
                 AllocationCreateInfo {

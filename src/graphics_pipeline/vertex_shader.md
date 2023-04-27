@@ -102,8 +102,10 @@ The line `layout(location = 0) in vec2 position;` declares that each vertex has 
 named `position` and of type `vec2`. This corresponds to the definition of the `MyVertex` struct we 
 created.
 
-> **Note**: Calling the `impl_vertex!` macro is what makes it possible for vulkano to build the
-> link between the content of the buffer and the input of the vertex shader.
+> **Note**: The `Vertex` trait is used to describe the attributes of an individual vertex that 
+> can be read by a vertex shader. It provides methods for specifying the format of the vertex's 
+> fields, which can be done using field attributes like `format` and `name` when deriving the 
+> trait using the `Vertex` derive macro.
 
 The `main` function is called once for each vertex, and sets the value of the `gl_Position`
 variable to a `vec4` whose first two components are the position of the vertex.

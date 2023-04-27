@@ -27,7 +27,7 @@ mod vs {
     vulkano_shaders::shader!{
         ty: "vertex",
         src: r"
-            #version 460
+            ##version 460
 
             layout(location = 0) in vec2 position;
 
@@ -42,7 +42,7 @@ mod fs {
     vulkano_shaders::shader!{
         ty: "fragment",
         src: "
-            #version 460
+            ##version 460
 
             layout(location = 0) out vec4 f_color;
 
@@ -117,7 +117,7 @@ To draw the triangle, we need to pass the pipeline, the vertex_buffer and the ac
 
 ```rust
 let mut builder = AutoCommandBufferBuilder::primary(
-    device.clone(),
+    &command_buffer_allocator,
     queue.queue_family_index(),
     CommandBufferUsage::OneTimeSubmit,
 )
