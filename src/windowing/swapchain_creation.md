@@ -221,7 +221,7 @@ Combining everything, we can create the swapchain:
 use vulkano::image::ImageUsage;
 use vulkano::swapchain::{Swapchain, SwapchainCreateInfo};
 
-let (swapchain, images) = Swapchain::new(
+let (mut swapchain, images) = Swapchain::new(
     device.clone(),
     surface.clone(),
     SwapchainCreateInfo {

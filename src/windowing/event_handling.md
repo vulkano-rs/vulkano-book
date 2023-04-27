@@ -51,7 +51,7 @@ invalid:
 ```rust
 use vulkano::swapchain::{SwapchainCreateInfo, SwapchainCreationError};
 
-Event::RedrawEventsCleared => {
+Event::MainEventsCleared => {
     if recreate_swapchain {
         recreate_swapchain = false;
 
@@ -108,7 +108,7 @@ if window_resized || recreate_swapchain {
             viewport.clone(),
         );
         command_buffers = get_command_buffers(
-            &device,
+            &command_buffer_allocator,
             &queue,
             &new_pipeline,
             &new_framebuffers,
@@ -160,14 +160,12 @@ use vulkano::swapchain::PresentInfo;
 
 let execution = sync::now(device.clone())
     .join(acquire_future)
-    .then_execute(queue.clone(), command_buffers[image_i].clone())
+    .then_execute(queue.clone(), 
+                  command_buffers[image_i as usize].clone())
     .unwrap()
     .then_swapchain_present(
         queue.clone(),
-        PresentInfo {
-            index: image_i,
-            ..PresentInfo::swapchain(swapchain.clone())
-        },
+        SwapchainPresentInfo::swapchain_image_index(swapchain.clone(), image_i)
     )
     .then_signal_fence_and_flush();
 ```
@@ -257,7 +255,7 @@ resources:
 ```rust
 // wait for the fence related to this image to finish
 // normally this would be the oldest fence, that most likely have already finished
-if let Some(image_fence) = &fences[image_i] {
+if let Some(image_fence) = &fences[image_i as usize] {
     image_fence.wait(None).unwrap();
 }
 ```
@@ -266,7 +264,7 @@ We will join with the future from the previous frame, so that we only need to sy
 future doesn't already exist:
 
 ```rust
-let previous_future = match fences[previous_fence_i].clone() {
+let previous_future = match fences[previous_fence_i as usize].clone() {
     // Create a NowFuture
     None => {
         let mut now = sync::now(device.clone());
@@ -288,7 +286,7 @@ Now that we have the `previous_future`, we can join and create a new one as usua
 ```rust
 let future = previous_future
     .join(acquire_future)
-    .then_execute(queue.clone(), command_buffers[image_i].clone())
+    .then_execute(queue.clone(), command_buffers[image_i as usize].clone())
     .unwrap()
     .then_swapchain_present(
         queue.clone(),
@@ -303,7 +301,7 @@ let future = previous_future
 And then substitute the old (obsolete) fence in the error handling:
 
 ```rust
-fences[image_i] = match future {
+fences[image_i as usize] = match future {
     Ok(value) => Some(Arc::new(value)),
     Err(FlushError::OutOfDate) => {
         recreate_swapchain = true;
