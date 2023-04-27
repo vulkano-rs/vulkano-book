@@ -205,7 +205,7 @@ Of all of these properties, we only care about some of them, mainly the dimensio
 transparency (composite alpha), and the format of the images.
 
 ```rust
-let dimensions = window().inner_size();
+let dimensions = window.inner_size();
 let composite_alpha = caps.supported_composite_alpha.iter().next().unwrap();
 let image_format = Some(
     physical_device
