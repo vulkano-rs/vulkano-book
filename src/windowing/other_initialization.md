@@ -253,7 +253,7 @@ fn get_command_buffers(
 
 // main()
 let mut command_buffers = get_command_buffers(
-    &device,
+    &command_buffer_allocator,
     &queue,
     &pipeline,
     &framebuffers,
