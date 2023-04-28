@@ -290,10 +290,7 @@ let future = previous_future
     .unwrap()
     .then_swapchain_present(
         queue.clone(),
-        PresentInfo {
-            index: image_i,
-            ..PresentInfo::swapchain(swapchain.clone())
-        },
+        SwapchainPresentInfo::swapchain_image_index(swapchain.clone(), image_i),
     )
     .then_signal_fence_and_flush();
 ```
