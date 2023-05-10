@@ -159,6 +159,7 @@ Now, let's create the descriptor set by adding the image view, like we did
 ```rust
 let layout = compute_pipeline.layout().set_layouts().get(0).unwrap();
 let set = PersistentDescriptorSet::new(
+    &descriptor_set_allocator,
     layout.clone(),
     [WriteDescriptorSet::image_view(0, view.clone())], // 0 is the binding
 )
