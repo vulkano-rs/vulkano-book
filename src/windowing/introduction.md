@@ -55,12 +55,30 @@ let event_loop = EventLoop::new();  // ignore this for now
 let surface = WindowBuilder::new()
     .build_vk_surface(&event_loop, instance.clone())
     .unwrap();
+
+let window = surface
+        .object()
+        .unwrap()
+        .clone()
+        .downcast::<Window>()
+        .unwrap();
 ```
 
 As you can see, we created a new object, called *surface*.
 
 The *surface* is a cross-platform abstraction over the actual window object, that vulkano can use 
-for rendering. As for the window itself, it can be retrieved by calling `surface.window()`, which 
+for rendering. As for the window itself, it can be retrieved this way:
+
+```rust
+let window = surface
+        .object()
+        .unwrap()
+        .clone()
+        .downcast::<Window>()
+        .unwrap();
+```
+
+ which 
 you can use to manipulate and change its default properties.
 
 After you made the change, running the program should now open a window, then immediately
@@ -98,6 +116,7 @@ makes our closure set the `control_flow` to `ControlFlow::Exit` which signals to
 an exit.
 
 <!-- todo: is this correct? -->
+
 <!-- > **Note**: Since there is nothing to stop it, the window will try to update as quickly as it can,
 > likely using all the power it can get from one of your cores.
 > We will change that, however, in the incoming chapters. -->
