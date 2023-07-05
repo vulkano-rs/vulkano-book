@@ -44,7 +44,7 @@ fn main() {
                 .queue_flags
                 .contains(QueueFlags::COMPUTE)
         })
-        .expect("couldn't find a graphical queue family") as u32;
+        .expect("couldn't find a compute queue family") as u32;
 
     let (device, mut queues) = Device::new(
         physical_device,
