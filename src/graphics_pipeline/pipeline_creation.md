@@ -165,7 +165,7 @@ To do that, as before, let's first create the buffer:
 let buf = Buffer::from_iter(
     &memory_allocator,
     BufferCreateInfo {
-        usage: BuferUsage::TRANSFER_DST,
+        usage: BufferUsage::TRANSFER_DST,
         ..Default::default()
     },
     AllocationCreateInfo {
