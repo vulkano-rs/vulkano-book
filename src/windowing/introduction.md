@@ -24,9 +24,9 @@ winit = "0.28.7"
 
 We encourage you to browse [the documentation of `winit`](https://docs.rs/winit).
 
-Because the objects that come with creating a window are not part of Vulkan itself, the first thing 
-that you will need to do is to enable all non-core extensions required to draw a window. 
-`vulkano_win` automatically provides them for us, so the only thing left is to pass them on to the 
+Because the objects that come with creating a window are not part of Vulkan itself, the first thing
+that you will need to do is to enable all non-core extensions required to draw a window.
+`vulkano_win` automatically provides them for us, so the only thing left is to pass them on to the
 instance creation:
 
 ```rust
@@ -55,34 +55,26 @@ let event_loop = EventLoop::new();  // ignore this for now
 let surface = WindowBuilder::new()
     .build_vk_surface(&event_loop, instance.clone())
     .unwrap();
-
-let window = surface
-        .object()
-        .unwrap()
-        .clone()
-        .downcast::<Window>()
-        .unwrap();
 ```
 
-As you can see, we created a new object, called *surface*.
+As you can see, we created a new object, called _surface_.
 
-The *surface* is a cross-platform abstraction over the actual window object, that vulkano can use 
-for rendering. As for the window itself, it can be retrieved this way:
+The _surface_ is a cross-platform abstraction over the actual window object, that vulkano can use for rendering. As for the window itself, it can be retrieved this way:
 
 ```rust
+use winit::window::Window;
+
 let window = surface
-        .object()
-        .unwrap()
-        .clone()
-        .downcast::<Window>()
-        .unwrap();
+    .object()
+    .unwrap()
+    .clone()
+    .downcast::<Window>()
+    .unwrap();
 ```
 
- which 
-you can use to manipulate and change its default properties.
+This enables you to manipulate and change its default properties.
 
-After you made the change, running the program should now open a window, then immediately
-close it when the `main` function exits.
+After you made the change, running the program should now open a window, then immediately close it when the `main` function exits.
 
 ## Events handling
 
@@ -108,11 +100,11 @@ event_loop.run(|event, _, control_flow| {
 ```
 
 What this code does is block the main thread forever, and calls the closure whenever the events
-loop (which we used to create our window) receives an event. These events include the events that 
+loop (which we used to create our window) receives an event. These events include the events that
 are tied to our window, such as mouse movements.
 
-When the user wants to close the window, a `WindowEvent::CloseRequested` event is received, which 
-makes our closure set the `control_flow` to `ControlFlow::Exit` which signals to winit that we want 
+When the user wants to close the window, a `WindowEvent::CloseRequested` event is received, which
+makes our closure set the `control_flow` to `ControlFlow::Exit` which signals to winit that we want
 an exit.
 
 <!-- todo: is this correct? -->
@@ -122,7 +114,7 @@ an exit.
 > We will change that, however, in the incoming chapters. -->
 
 Right now, all we're doing is creating a window and keeping our program alive for as long as the
-window isn't closed. The next section will show how to initialize what is called a *swapchain* on
+window isn't closed. The next section will show how to initialize what is called a _swapchain_ on
 the window's surface.
 
 Next: [Swapchain creation](swapchain_creation.html)
