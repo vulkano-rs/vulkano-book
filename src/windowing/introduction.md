@@ -19,7 +19,7 @@ Add to your `Cargo.toml` dependencies:
 
 ```toml
 vulkano-win = "0.33.0"
-winit = "0.28.3"
+winit = "0.28.7"
 ```
 
 We encourage you to browse [the documentation of `winit`](https://docs.rs/winit).
@@ -48,8 +48,8 @@ Now, let's create the actual window:
 
 ```rust
 use vulkano_win::VkSurfaceBuild;
-use winit::event_loop::{EventLoop};
-use winit::window::{WindowBuilder};
+use winit::event_loop::EventLoop;
+use winit::window::WindowBuilder;
 
 let event_loop = EventLoop::new();  // ignore this for now
 let surface = WindowBuilder::new()
