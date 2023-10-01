@@ -205,8 +205,9 @@ also have multiple framebuffers, we will have multiple command buffers as well, 
 framebuffer. Let's put everything nicely into a function:
 
 ```rust
-use vulkano::buffer::subbuffer::Subbuffer;
+use vulkano::buffer::Subbuffer;
 use vulkano::command_buffer::{
+    allocator::StandardCommandBufferAllocator,
     AutoCommandBufferBuilder, CommandBufferUsage, PrimaryAutoCommandBuffer, SubpassContents,
     RenderPassBeginInfo,
 };
