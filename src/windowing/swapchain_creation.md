@@ -206,7 +206,7 @@ transparency (composite alpha), and the format of the images.
 
 ```rust
 let dimensions = window.inner_size();
-let composite_alpha = caps.supported_composite_alpha.iter().next().unwrap();
+let composite_alpha = caps.supported_composite_alpha.into_iter().next().unwrap();
 let image_format = Some(
     physical_device
         .surface_formats(&surface, Default::default())
