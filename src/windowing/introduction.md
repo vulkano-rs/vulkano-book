@@ -57,9 +57,9 @@ let surface = WindowBuilder::new()
     .unwrap();
 ```
 
-As you can see, we created a new object, called _surface_.
+As you can see, we created a new object, called *surface*.
 
-The _surface_ is a cross-platform abstraction over the actual window object, that vulkano can use for rendering. As for the window itself, it can be retrieved this way:
+The *surface_ is a cross-platform abstraction over the actual window object, that vulkano can use for rendering. As for the window itself, it can be retrieved this way:
 
 ```rust
 use winit::window::Window;
@@ -114,7 +114,7 @@ an exit.
 > We will change that, however, in the incoming chapters. -->
 
 Right now, all we're doing is creating a window and keeping our program alive for as long as the
-window isn't closed. The next section will show how to initialize what is called a _swapchain_ on
+window isn't closed. The next section will show how to initialize what is called a *swapchain* on
 the window's surface.
 
 Next: [Swapchain creation](swapchain_creation.html)

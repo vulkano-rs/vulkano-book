@@ -124,7 +124,7 @@ the previously recreated framebuffers, so they will need to be recreated as well
 
 ## Acquiring and presenting
 
-To actually start drawing, the first thing that we need to do is to _acquire_ an image to draw:
+To actually start drawing, the first thing that we need to do is to *acquire* an image to draw:
 
 ```rust
 use vulkano::swapchain;
@@ -174,10 +174,10 @@ let execution = sync::now(device.clone())
 Like we did in earlier chapters, we start by synchronizing. However, the command buffer can't be
 executed immediately, as it needs to wait for the image to actually become available. To do that,
 we `.join()` with the other future that we got from `acquire_next_image()`, the two representing
-the moment where we have synchronized _and_ actually acquired the said image. We can then instruct
+the moment where we have synchronized *and* actually acquired the said image. We can then instruct
 the GPU to execute our main command buffer as usual (we select it by using the image index).
 
-In the end, we need to _present_ the image to the swapchain, telling it that we have finished
+In the end, we need to *present* the image to the swapchain, telling it that we have finished
 drawing and the image is ready for display. Don't forget to add a fence and flush the future.
 
 We are now doing more than just executing a command buffer, so let's do a bit of error handling:
@@ -207,7 +207,7 @@ now, you should see the window popup with a nice triangle, which you can resize 
 ## Frames in flight: executing instructions parallel to the GPU
 
 Currently the CPU waits between frames for the GPU to finish, which is somewhat inefficient. What
-we are going to do now is to implement the functionality of _frames in flight_, allowing the CPU to
+we are going to do now is to implement the functionality of *frames in flight*, allowing the CPU to
 start processing new frames while the GPU is working on older ones.
 
 To do that, we need to save the created fences and reuse them later. Each stored fence will
@@ -223,7 +223,7 @@ them, which will automatically hold each of their specific resources. We won't n
 each frame, as we can just join with the previous frames (as all of the operations should happen
 continuously, anyway).
 
-> **Note**: Here we will use _fence_ and _future_ somewhat interchangeably, as each fence
+> **Note**: Here we will use *fence* and *future* somewhat interchangeably, as each fence
 > corresponds to a future and vice versa. Each time we mention a fence, think of it as a future
 > that incorporates a fence.
 
