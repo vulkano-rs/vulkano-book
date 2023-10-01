@@ -105,11 +105,10 @@ use std::sync::Arc;
 use vulkano::device::physical::{PhysicalDevice, PhysicalDeviceType};
 use vulkano::device::DeviceExtensions;
 use vulkano::swapchain::Surface;
-use winit::window::Window;
 
 fn select_physical_device(
     instance: &Arc<Instance>,
-    surface: &Arc<Surface<Window>>,
+    surface: &Arc<Surface>,
     device_extensions: &DeviceExtensions,
 ) -> (Arc<PhysicalDevice>, u32) {
     instance
