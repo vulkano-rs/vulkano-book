@@ -105,11 +105,10 @@ use std::sync::Arc;
 use vulkano::device::physical::{PhysicalDevice, PhysicalDeviceType};
 use vulkano::device::DeviceExtensions;
 use vulkano::swapchain::Surface;
-use winit::window::Window;
 
 fn select_physical_device(
     instance: &Arc<Instance>,
-    surface: &Arc<Surface<Window>>,
+    surface: &Arc<Surface>,
     device_extensions: &DeviceExtensions,
 ) -> (Arc<PhysicalDevice>, u32) {
     instance
@@ -205,8 +204,8 @@ Of all of these properties, we only care about some of them, mainly the dimensio
 transparency (composite alpha), and the format of the images.
 
 ```rust
-let dimensions = window().inner_size();
-let composite_alpha = caps.supported_composite_alpha.iter().next().unwrap();
+let dimensions = window.inner_size();
+let composite_alpha = caps.supported_composite_alpha.into_iter().next().unwrap();
 let image_format = Some(
     physical_device
         .surface_formats(&surface, Default::default())
@@ -221,7 +220,7 @@ Combining everything, we can create the swapchain:
 use vulkano::image::ImageUsage;
 use vulkano::swapchain::{Swapchain, SwapchainCreateInfo};
 
-let (swapchain, images) = Swapchain::new(
+let (mut swapchain, images) = Swapchain::new(
     device.clone(),
     surface.clone(),
     SwapchainCreateInfo {

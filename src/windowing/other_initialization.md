@@ -10,7 +10,7 @@ invalid format errors:
 ```rust
 use vulkano::render_pass::RenderPass;
 
-fn get_render_pass(device: Arc<Device>, swapchain: &Arc<Swapchain<Window>>) -> Arc<RenderPass> {
+fn get_render_pass(device: Arc<Device>, swapchain: &Arc<Swapchain>) -> Arc<RenderPass> {
     vulkano::single_pass_renderpass!(
         device,
         attachments: {
@@ -42,7 +42,7 @@ use vulkano::image::SwapchainImage;
 use vulkano::render_pass::{Framebuffer, FramebufferCreateInfo};
 
 fn get_framebuffers(
-    images: &[Arc<SwapchainImage<Window>>],
+    images: &[Arc<SwapchainImage>],
     render_pass: &Arc<RenderPass>,
 ) -> Vec<Arc<Framebuffer>> {
     images
@@ -149,7 +149,6 @@ As for the pipeline, let's initialize the viewport with our window dimensions:
 
 ```rust
 use vulkano::pipeline::graphics::input_assembly::InputAssemblyState;
-use vulkano::pipeline::graphics::vertex_input::BuffersDefinition;
 use vulkano::pipeline::graphics::viewport::{Viewport, ViewportState};
 use vulkano::pipeline::GraphicsPipeline;
 use vulkano::render_pass::Subpass;
@@ -163,7 +162,7 @@ fn get_pipeline(
     viewport: Viewport,
 ) -> Arc<GraphicsPipeline> {
     GraphicsPipeline::start()
-        .vertex_input_state(BuffersDefinition::new().vertex::<Vertex>())
+        .vertex_input_state(MyVertex::per_vertex())
         .vertex_shader(vs.entry_point("main").unwrap(), ())
         .input_assembly_state(InputAssemblyState::new())
         .viewport_state(ViewportState::viewport_fixed_scissor_irrelevant([viewport]))
@@ -178,7 +177,7 @@ fn main() {
 
     let mut viewport = Viewport {
         origin: [0.0, 0.0],
-        dimensions: surface.window().inner_size().into(),
+        dimensions: window.inner_size().into(),
         depth_range: 0.0..1.0,
     };
 
@@ -206,8 +205,9 @@ also have multiple framebuffers, we will have multiple command buffers as well, 
 framebuffer. Let's put everything nicely into a function:
 
 ```rust
-use vulkano::buffer::TypedBufferAccess;
+use vulkano::buffer::Subbuffer;
 use vulkano::command_buffer::{
+    allocator::StandardCommandBufferAllocator,
     AutoCommandBufferBuilder, CommandBufferUsage, PrimaryAutoCommandBuffer, SubpassContents,
     RenderPassBeginInfo,
 };
@@ -215,17 +215,17 @@ use vulkano::command_buffer::{
 use vulkano::device::Queue;
 
 fn get_command_buffers(
-    device: &Arc<Device>,
+    command_buffer_allocator: &StandardCommandBufferAllocator,
     queue: &Arc<Queue>,
     pipeline: &Arc<GraphicsPipeline>,
     framebuffers: &Vec<Arc<Framebuffer>>,
-    vertex_buffer: &Arc<CpuAccessibleBuffer<[MyVertex]>>,
+    vertex_buffer: &Subbuffer<[MyVertex]>,
 ) -> Vec<Arc<PrimaryAutoCommandBuffer>> {
     framebuffers
         .iter()
         .map(|framebuffer| {
             let mut builder = AutoCommandBufferBuilder::primary(
-                device.clone(),
+                command_buffer_allocator,
                 queue.queue_family_index(),
                 CommandBufferUsage::MultipleSubmit, // don't forget to write the correct buffer usage
             )
@@ -254,7 +254,7 @@ fn get_command_buffers(
 
 // main()
 let mut command_buffers = get_command_buffers(
-    &device,
+    &command_buffer_allocator,
     &queue,
     &pipeline,
     &framebuffers,
