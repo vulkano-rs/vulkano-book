@@ -141,7 +141,7 @@ let (image_i, suboptimal, acquire_future) =
 ```
 
 The `acquire_next_image()` function returns the image index on which we are allowed to draw, as
-well as a _future_ representing the moment when the GPU will gain access to that image.
+well as a *future* representing the moment when the GPU will gain access to that image.
 
 If no image is available (which happens if you submit draw commands too quickly), then the function
 will block and wait until there is. The second parameter is an optional timeout.
@@ -166,7 +166,7 @@ let execution = sync::now(device.clone())
     .unwrap()
     .then_swapchain_present(
         queue.clone(),
-        SwapchainPresentInfo::swapchain_image_index(swapchain.clone(), image_i)
+        SwapchainPresentInfo::swapchain_image_index(swapchain.clone(), image_i),
     )
     .then_signal_fence_and_flush();
 ```

@@ -59,7 +59,8 @@ let surface = WindowBuilder::new()
 
 As you can see, we created a new object, called *surface*.
 
-The *surface_ is a cross-platform abstraction over the actual window object, that vulkano can use for rendering. As for the window itself, it can be retrieved this way:
+The *surface* is a cross-platform abstraction over the actual window object, that vulkano can use
+for rendering. As for the window itself, it can be retrieved this way:
 
 ```rust
 use winit::window::Window;
@@ -74,7 +75,8 @@ let window = surface
 
 This enables you to manipulate and change its default properties.
 
-After you made the change, running the program should now open a window, then immediately close it when the `main` function exits.
+After you made the change, running the program should now open a window, then immediately close it
+when the `main` function exits.
 
 ## Events handling
 
