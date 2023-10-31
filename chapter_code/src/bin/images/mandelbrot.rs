@@ -12,6 +12,8 @@
 //!
 //! It is not commented, as the explanations can be found in the guide itself.
 
+use std::sync::Arc;
+
 use image::{ImageBuffer, Rgba};
 use vulkano::buffer::{Buffer, BufferCreateInfo, BufferUsage};
 use vulkano::command_buffer::allocator::StandardCommandBufferAllocator;
@@ -23,10 +25,14 @@ use vulkano::descriptor_set::{PersistentDescriptorSet, WriteDescriptorSet};
 use vulkano::device::{Device, DeviceCreateInfo, QueueCreateInfo, QueueFlags};
 use vulkano::format::Format;
 use vulkano::image::view::ImageView;
-use vulkano::image::{ImageDimensions, StorageImage};
+use vulkano::image::{Image, ImageCreateInfo, ImageType, ImageUsage};
 use vulkano::instance::{Instance, InstanceCreateInfo};
-use vulkano::memory::allocator::{AllocationCreateInfo, MemoryUsage, StandardMemoryAllocator};
-use vulkano::pipeline::{ComputePipeline, Pipeline, PipelineBindPoint};
+use vulkano::memory::allocator::{AllocationCreateInfo, MemoryTypeFilter, StandardMemoryAllocator};
+use vulkano::pipeline::compute::ComputePipelineCreateInfo;
+use vulkano::pipeline::layout::PipelineDescriptorSetLayoutCreateInfo;
+use vulkano::pipeline::{
+    ComputePipeline, Pipeline, PipelineBindPoint, PipelineLayout, PipelineShaderStageCreateInfo,
+};
 use vulkano::sync::{self, GpuFuture};
 
 pub fn main() {
@@ -98,48 +104,64 @@ pub fn main() {
 
     let shader = cs::load(device.clone()).expect("failed to create shader module");
 
+    let cs = shader.entry_point("main").unwrap();
+    let stage = PipelineShaderStageCreateInfo::new(cs);
+    let layout = PipelineLayout::new(
+        device.clone(),
+        PipelineDescriptorSetLayoutCreateInfo::from_stages([&stage])
+            .into_pipeline_layout_create_info(device.clone())
+            .unwrap(),
+    )
+    .unwrap();
+
     let compute_pipeline = ComputePipeline::new(
         device.clone(),
-        shader.entry_point("main").unwrap(),
-        &(),
         None,
-        |_| {},
+        ComputePipelineCreateInfo::stage_layout(stage, layout),
     )
     .expect("failed to create compute pipeline");
 
-    let memory_allocator = StandardMemoryAllocator::new_default(device.clone());
+    let memory_allocator = Arc::new(StandardMemoryAllocator::new_default(device.clone()));
 
-    let image = StorageImage::new(
-        &memory_allocator,
-        ImageDimensions::Dim2d {
-            width: 1024,
-            height: 1024,
-            array_layers: 1,
+    let image = Image::new(
+        memory_allocator.clone(),
+        ImageCreateInfo {
+            image_type: ImageType::Dim2d,
+            format: Format::R8G8B8A8_UNORM,
+            extent: [1024, 1024, 1],
+            usage: ImageUsage::STORAGE | ImageUsage::TRANSFER_SRC,
+            ..Default::default()
         },
-        Format::R8G8B8A8_UNORM,
-        Some(queue.queue_family_index()),
+        AllocationCreateInfo {
+            memory_type_filter: MemoryTypeFilter::PREFER_DEVICE,
+            ..Default::default()
+        },
     )
     .unwrap();
+
     let view = ImageView::new_default(image.clone()).unwrap();
 
-    let descriptor_set_allocator = StandardDescriptorSetAllocator::new(device.clone());
+    let descriptor_set_allocator =
+        StandardDescriptorSetAllocator::new(device.clone(), Default::default());
 
     let layout = compute_pipeline.layout().set_layouts().get(0).unwrap();
     let set = PersistentDescriptorSet::new(
         &descriptor_set_allocator,
         layout.clone(),
         [WriteDescriptorSet::image_view(0, view)], // 0 is the binding
+        [],
     )
     .unwrap();
 
     let buf = Buffer::from_iter(
-        &memory_allocator,
+        memory_allocator.clone(),
         BufferCreateInfo {
             usage: BufferUsage::TRANSFER_DST,
             ..Default::default()
         },
         AllocationCreateInfo {
-            usage: MemoryUsage::Download,
+            memory_type_filter: MemoryTypeFilter::PREFER_HOST
+                | MemoryTypeFilter::HOST_RANDOM_ACCESS,
             ..Default::default()
         },
         (0..1024 * 1024 * 4).map(|_| 0u8),
@@ -157,12 +179,14 @@ pub fn main() {
     .unwrap();
     builder
         .bind_pipeline_compute(compute_pipeline.clone())
+        .unwrap()
         .bind_descriptor_sets(
             PipelineBindPoint::Compute,
             compute_pipeline.layout().clone(),
             0,
             set,
         )
+        .unwrap()
         .dispatch([1024 / 8, 1024 / 8, 1])
         .unwrap()
         .copy_image_to_buffer(CopyImageToBufferInfo::image_buffer(image, buf.clone()))

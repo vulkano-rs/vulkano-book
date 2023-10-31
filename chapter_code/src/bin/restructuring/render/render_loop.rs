@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
-use vulkano::swapchain::AcquireError;
-use vulkano::sync::{FlushError, GpuFuture};
+use vulkano::VulkanError;
+use vulkano::{sync::GpuFuture, Validated};
 use winit::event_loop::EventLoop;
 
 use crate::render::renderer::{Fence, Renderer};
@@ -40,9 +40,13 @@ impl RenderLoop {
             self.renderer.recreate_swapchain();
         }
 
-        let (image_i, suboptimal, acquire_future) = match self.renderer.acquire_swapchain_image() {
+        let (image_i, suboptimal, acquire_future) = match self
+            .renderer
+            .acquire_swapchain_image()
+            .map_err(Validated::unwrap)
+        {
             Ok(r) => r,
-            Err(AcquireError::OutOfDate) => {
+            Err(VulkanError::OutOfDate) => {
                 self.recreate_swapchain = true;
                 return;
             }
@@ -78,9 +82,9 @@ impl RenderLoop {
             .renderer
             .flush_next_future(previous_future, acquire_future, image_i);
 
-        self.fences[image_i as usize] = match result {
+        self.fences[image_i as usize] = match result.map_err(Validated::unwrap) {
             Ok(fence) => Some(Arc::new(fence)),
-            Err(FlushError::OutOfDate) => {
+            Err(VulkanError::OutOfDate) => {
                 self.recreate_swapchain = true;
                 None
             }
