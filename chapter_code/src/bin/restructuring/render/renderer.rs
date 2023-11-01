@@ -49,7 +49,7 @@ impl Renderer {
     pub fn initialize(event_loop: &EventLoop<()>) -> Self {
         let instance = vulkano_objects::instance::get_instance(event_loop);
 
-        let window = Arc::new(WindowBuilder::new().build(&event_loop).unwrap());
+        let window = Arc::new(WindowBuilder::new().build(event_loop).unwrap());
 
         let surface = Surface::from_window(instance.clone(), window.clone()).unwrap();
 
