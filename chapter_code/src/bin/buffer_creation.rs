@@ -85,7 +85,7 @@ fn main() {
         },
         AllocationCreateInfo {
             memory_type_filter: MemoryTypeFilter::PREFER_HOST
-                | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
+                | MemoryTypeFilter::HOST_RANDOM_ACCESS,
             ..Default::default()
         },
         destination_content,
