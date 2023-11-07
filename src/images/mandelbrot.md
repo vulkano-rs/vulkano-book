@@ -129,15 +129,19 @@ Now that the shader is written, the rest should be straight-forward. We start by
 as seen before:
 
 ```rust
-let image = StorageImage::new(
-    &memory_allocator,
-    ImageDimensions::Dim2d {
-        width: 1024,
-        height: 1024,
-        array_layers: 1,
+let image = Image::new(
+    memory_allocator.clone(),
+    ImageCreateInfo {
+        image_type: ImageType::Dim2d,
+        format: Format::R8G8B8A8_UNORM,
+        extent: [1024, 1024, 1],
+        usage: ImageUsage::STORAGE | ImageUsage::TRANSFER_SRC,
+        ..Default::default()
     },
-    Format::R8G8B8A8_UNORM,
-    Some(queue.queue_family_index()),
+    AllocationCreateInfo {
+        memory_type_filter: MemoryTypeFilter::PREFER_DEVICE,
+        ..Default::default()
+    },
 )
 .unwrap();
 ```
@@ -170,13 +174,14 @@ Next, we can create a buffer for storing the image output:
 
 ```rust
 let buf = Buffer::from_iter(
-    &memory_allocator,
+    memory_allocator.clone(),
     BufferCreateInfo {
         usage: BufferUsage::TRANSFER_DST,
         ..Default::default()
     },
     AllocationCreateInfo {
-        usage: MemoryUsage::Download,
+        memory_type_filter: MemoryTypeFilter::PREFER_HOST
+            | MemoryTypeFilter::HOST_RANDOM_ACCESS,
         ..Default::default()
     },
     (0..1024 * 1024 * 4).map(|_| 0u8),
@@ -195,12 +200,14 @@ let mut builder = AutoCommandBufferBuilder::primary(
 .unwrap();
 builder
     .bind_pipeline_compute(compute_pipeline.clone())
+    .unwrap()
     .bind_descriptor_sets(
         PipelineBindPoint::Compute,
         compute_pipeline.layout().clone(),
         0,
         set,
     )
+    .unwrap()
     .dispatch([1024 / 8, 1024 / 8, 1])
     .unwrap()
     .copy_image_to_buffer(CopyImageToBufferInfo::image_buffer(

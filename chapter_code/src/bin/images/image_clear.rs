@@ -64,7 +64,6 @@ pub fn main() {
         StandardCommandBufferAllocator::new(device.clone(), Default::default());
 
     // Image creation
-
     let image = Image::new(
         memory_allocator.clone(),
         ImageCreateInfo {
