@@ -48,7 +48,7 @@ To get started with vulkano, add it as a project dependency to your Cargo.toml:
 
 ```toml
 [dependencies]
-vulkano = "0.33.0"
+vulkano = "0.34.0"
 ```
 
 You may want to consider adding the following minimum optimization level to your `Cargo.toml` as 
