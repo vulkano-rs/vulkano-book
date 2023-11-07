@@ -55,7 +55,7 @@ if you are confused, as we will only use the most simple formats in this guide.
 
 ## Image creation
 
-Creating an image is very similar to creating a buffer. 
+Similar to buffers, images are created by providing information about the image and allocation. However, unlike buffers, images always begin in an uninitialized state.
 
 ```rust
 use vulkano::image::{ImageDimensions, Image};
@@ -78,11 +78,7 @@ let image = Image::new(
 .unwrap();
 ```
 
-We pass the dimensions of the image and the desired format. The queue family to use is similar to 
-the parameter when creating a buffer. It indicates which queue families are going to access the 
-image.
-
-> **Note**: Images can be made of layers, but for this example we only have one layer. Also, images 
-> have usage flags similar to buffers, but this precise constructor doesn't require them.
+We pass the dimensions of the image and the desired format. 
+<!-- TODO: add sentence about usage flags -->
 
 Next: [Clearing an image](image_clear.html)
