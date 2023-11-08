@@ -8,7 +8,7 @@ use vulkano::command_buffer::{
 use vulkano::descriptor_set::layout::DescriptorSetLayout;
 use vulkano::descriptor_set::{PersistentDescriptorSet, WriteDescriptorSet};
 use vulkano::device::Queue;
-use vulkano::memory::allocator::{AllocationCreateInfo, MemoryUsage};
+use vulkano::memory::allocator::{AllocationCreateInfo, MemoryTypeFilter};
 use vulkano::sync::future::NowFuture;
 use vulkano::sync::GpuFuture;
 use vulkano::DeviceSize;
@@ -91,13 +91,14 @@ where
     M: Model<V, U>,
 {
     Buffer::from_iter(
-        &allocators.memory,
+        allocators.memory.clone(),
         BufferCreateInfo {
             usage: BufferUsage::VERTEX_BUFFER,
             ..Default::default()
         },
         AllocationCreateInfo {
-            usage: MemoryUsage::Upload,
+            memory_type_filter: MemoryTypeFilter::PREFER_DEVICE
+                | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
             ..Default::default()
         },
         M::get_vertices(),
@@ -117,13 +118,13 @@ where
     let vertices = M::get_vertices();
 
     let buffer = Buffer::new_slice(
-        &allocators.memory,
+        allocators.memory.clone(),
         BufferCreateInfo {
             usage: BufferUsage::VERTEX_BUFFER | BufferUsage::TRANSFER_DST,
             ..Default::default()
         },
         AllocationCreateInfo {
-            usage: MemoryUsage::DeviceOnly,
+            memory_type_filter: MemoryTypeFilter::PREFER_DEVICE,
             ..Default::default()
         },
         vertices.len() as DeviceSize,
@@ -131,13 +132,14 @@ where
     .unwrap();
 
     let staging_buffer = Buffer::from_iter(
-        &allocators.memory,
+        allocators.memory.clone(),
         BufferCreateInfo {
             usage: BufferUsage::TRANSFER_SRC,
             ..Default::default()
         },
         AllocationCreateInfo {
-            usage: MemoryUsage::Upload,
+            memory_type_filter: MemoryTypeFilter::PREFER_HOST
+                | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
             ..Default::default()
         },
         vertices,
@@ -166,13 +168,14 @@ where
     M: Model<V, U>,
 {
     Buffer::from_iter(
-        &allocators.memory,
+        allocators.memory.clone(),
         BufferCreateInfo {
             usage: BufferUsage::INDEX_BUFFER,
             ..Default::default()
         },
         AllocationCreateInfo {
-            usage: MemoryUsage::Upload,
+            memory_type_filter: MemoryTypeFilter::PREFER_DEVICE
+                | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
             ..Default::default()
         },
         M::get_indices(),
@@ -192,13 +195,13 @@ where
     let indices = M::get_indices();
 
     let buffer = Buffer::new_slice(
-        &allocators.memory,
+        allocators.memory.clone(),
         BufferCreateInfo {
             usage: BufferUsage::INDEX_BUFFER | BufferUsage::TRANSFER_DST,
             ..Default::default()
         },
         AllocationCreateInfo {
-            usage: MemoryUsage::DeviceOnly,
+            memory_type_filter: MemoryTypeFilter::PREFER_DEVICE,
             ..Default::default()
         },
         indices.len() as DeviceSize,
@@ -206,13 +209,14 @@ where
     .unwrap();
 
     let staging_buffer = Buffer::from_iter(
-        &allocators.memory,
+        allocators.memory.clone(),
         BufferCreateInfo {
             usage: BufferUsage::TRANSFER_SRC,
             ..Default::default()
         },
         AllocationCreateInfo {
-            usage: MemoryUsage::Upload,
+            memory_type_filter: MemoryTypeFilter::PREFER_HOST
+                | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
             ..Default::default()
         },
         indices,
@@ -247,13 +251,14 @@ where
     (0..buffer_count)
         .map(|_| {
             let buffer = Buffer::from_data(
-                &allocators.memory,
+                allocators.memory.clone(),
                 BufferCreateInfo {
                     usage: BufferUsage::UNIFORM_BUFFER,
                     ..Default::default()
                 },
                 AllocationCreateInfo {
-                    usage: MemoryUsage::Upload,
+                    memory_type_filter: MemoryTypeFilter::PREFER_DEVICE
+                        | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
                     ..Default::default()
                 },
                 M::get_initial_uniform_data(),
@@ -264,6 +269,7 @@ where
                 &allocators.descriptor_set,
                 descriptor_set_layout.clone(),
                 [WriteDescriptorSet::buffer(0, buffer.clone())],
+                [],
             )
             .unwrap();
 

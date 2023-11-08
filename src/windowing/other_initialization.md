@@ -8,17 +8,16 @@ In the render pass, let's configure it to always use the same format as the swap
 invalid format errors:
 
 ```rust
-use vulkano::render_pass::RenderPass;
-
 fn get_render_pass(device: Arc<Device>, swapchain: &Arc<Swapchain>) -> Arc<RenderPass> {
     vulkano::single_pass_renderpass!(
         device,
         attachments: {
             color: {
-                load: Clear,
-                store: Store,
-                format: swapchain.image_format(), // set the format the same as the swapchain
+                // Set the format the same as the swapchain.
+                format: swapchain.image_format(),
                 samples: 1,
+                load_op: Clear,
+                store_op: Store,
             },
         },
         pass: {
@@ -37,12 +36,8 @@ When we only had one image, we only needed to create one framebuffer for it. How
 to create a different framebuffer for each of the images:
 
 ```rust
-use vulkano::image::view::ImageView;
-use vulkano::image::SwapchainImage;
-use vulkano::render_pass::{Framebuffer, FramebufferCreateInfo};
-
 fn get_framebuffers(
-    images: &[Arc<SwapchainImage>],
+    images: &[Arc<Image>],
     render_pass: &Arc<RenderPass>,
 ) -> Vec<Arc<Framebuffer>> {
     images
@@ -69,10 +64,6 @@ We don't need to modify anything in the shaders and the vertex buffer (we are us
 triangle), so let's just leave everything as it is, only changing the structure a bit:
 
 ```rust
-use vulkano::buffer::{Buffer, BufferContents, BufferCreateInfo, BufferUsage};
-use vulkano::memory::allocator::AllocationCreateInfo;
-use vulkano::pipeline::graphics::vertex_input::Vertex;
-
 #[derive(BufferContents, Vertex)]
 #[repr(C)]
 struct MyVertex {
@@ -125,13 +116,14 @@ fn main() {
         position: [0.5, -0.25],
     };
     let vertex_buffer = Buffer::from_iter(
-        &memory_allocator,
+        memory_allocator.clone(),
         BufferCreateInfo {
             usage: BufferUsage::VERTEX_BUFFER,
             ..Default::default()
         },
         AllocationCreateInfo {
-            usage: MemoryUsage::Upload,
+            memory_type_filter: MemoryTypeFilter::PREFER_DEVICE
+                | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
             ..Default::default()
         },
         vec![vertex1, vertex2, vertex3],
@@ -148,12 +140,6 @@ fn main() {
 As for the pipeline, let's initialize the viewport with our window dimensions:
 
 ```rust
-use vulkano::pipeline::graphics::input_assembly::InputAssemblyState;
-use vulkano::pipeline::graphics::viewport::{Viewport, ViewportState};
-use vulkano::pipeline::GraphicsPipeline;
-use vulkano::render_pass::Subpass;
-use vulkano::shader::ShaderModule;
-
 fn get_pipeline(
     device: Arc<Device>,
     vs: Arc<ShaderModule>,
@@ -161,15 +147,50 @@ fn get_pipeline(
     render_pass: Arc<RenderPass>,
     viewport: Viewport,
 ) -> Arc<GraphicsPipeline> {
-    GraphicsPipeline::start()
-        .vertex_input_state(MyVertex::per_vertex())
-        .vertex_shader(vs.entry_point("main").unwrap(), ())
-        .input_assembly_state(InputAssemblyState::new())
-        .viewport_state(ViewportState::viewport_fixed_scissor_irrelevant([viewport]))
-        .fragment_shader(fs.entry_point("main").unwrap(), ())
-        .render_pass(Subpass::from(render_pass, 0).unwrap())
-        .build(device)
-        .unwrap()
+    let vs = vs.entry_point("main").unwrap();
+    let fs = fs.entry_point("main").unwrap();
+
+    let vertex_input_state = MyVertex::per_vertex()
+        .definition(&vs.info().input_interface)
+        .unwrap();
+
+    let stages = [
+        PipelineShaderStageCreateInfo::new(vs),
+        PipelineShaderStageCreateInfo::new(fs),
+    ];
+
+    let layout = PipelineLayout::new(
+        device.clone(),
+        PipelineDescriptorSetLayoutCreateInfo::from_stages(&stages)
+            .into_pipeline_layout_create_info(device.clone())
+            .unwrap(),
+    )
+    .unwrap();
+
+    let subpass = Subpass::from(render_pass.clone(), 0).unwrap();
+
+    GraphicsPipeline::new(
+        device.clone(),
+        None,
+        GraphicsPipelineCreateInfo {
+            stages: stages.into_iter().collect(),
+            vertex_input_state: Some(vertex_input_state),
+            input_assembly_state: Some(InputAssemblyState::default()),
+            viewport_state: Some(ViewportState {
+                viewports: [viewport].into_iter().collect(),
+                ..Default::default()
+            }),
+            rasterization_state: Some(RasterizationState::default()),
+            multisample_state: Some(MultisampleState::default()),
+            color_blend_state: Some(ColorBlendState::with_attachment_states(
+                subpass.num_color_attachments(),
+                ColorBlendAttachmentState::default(),
+            )),
+            subpass: Some(subpass.into()),
+            ..GraphicsPipelineCreateInfo::layout(layout)
+        },
+    )
+    .unwrap()
 }
 
 fn main() {
@@ -205,14 +226,7 @@ also have multiple framebuffers, we will have multiple command buffers as well, 
 framebuffer. Let's put everything nicely into a function:
 
 ```rust
-use vulkano::buffer::Subbuffer;
-use vulkano::command_buffer::{
-    allocator::StandardCommandBufferAllocator,
-    AutoCommandBufferBuilder, CommandBufferUsage, PrimaryAutoCommandBuffer, SubpassContents,
-    RenderPassBeginInfo,
-};
-
-use vulkano::device::Queue;
+use vulkano::command_buffer::PrimaryAutoCommandBuffer;
 
 fn get_command_buffers(
     command_buffer_allocator: &StandardCommandBufferAllocator,
@@ -227,7 +241,8 @@ fn get_command_buffers(
             let mut builder = AutoCommandBufferBuilder::primary(
                 command_buffer_allocator,
                 queue.queue_family_index(),
-                CommandBufferUsage::MultipleSubmit, // don't forget to write the correct buffer usage
+                // Don't forget to write the correct buffer usage.
+                CommandBufferUsage::MultipleSubmit,
             )
             .unwrap();
 
@@ -237,14 +252,17 @@ fn get_command_buffers(
                         clear_values: vec![Some([0.1, 0.1, 0.1, 1.0].into())],
                         ..RenderPassBeginInfo::framebuffer(framebuffer.clone())
                     },
-                    SubpassContents::Inline,
+                    SubpassBeginInfo {
+                        contents: SubpassContents::Inline,
+                        ..Default::default()
+                    },
                 )
                 .unwrap()
                 .bind_pipeline_graphics(pipeline.clone())
                 .bind_vertex_buffers(0, vertex_buffer.clone())
                 .draw(vertex_buffer.len() as u32, 1, 0, 0)
                 .unwrap()
-                .end_render_pass()
+                .end_render_pass(SubpassEndInfo::default())
                 .unwrap();
 
             Arc::new(builder.build().unwrap())

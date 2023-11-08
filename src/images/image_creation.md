@@ -44,7 +44,7 @@ of one to four values. The four components are named, in order, R, G, B and A.
 > that we can store arbitrary data in this format instead of colors.
 
 You can check [the list of available formats
-here](https://docs.rs/vulkano/0.33.0/vulkano/format/enum.Format.html).
+here](https://docs.rs/vulkano/0.34.0/vulkano/format/enum.Format.html).
 
 For example if you create an image with the format `R8_SINT`, then it will only have one component.
 But with the format `A2R10G10B10_SSCALED_PACK32`, you have all four components. The first part of 
@@ -55,35 +55,32 @@ if you are confused, as we will only use the most simple formats in this guide.
 
 ## Image creation
 
-Creating an image is very similar to creating a buffer. Just like there are multiple different
-structs in vulkano that represent buffers, there are also multiple different structs that represent 
-images. Here we are going to use a *StorageImage*, which is a general-purpose image.
-
-> **Note**: In practice the `StorageImage` is recommended for storing general-purpose values for
-> usage in shaders, like you would use a buffer. It is not recommended for storing actual images.
+Similar to buffers, images are created by providing information about the image and allocation.
+However, unlike buffers, images always begin in an uninitialized state.
 
 ```rust
-use vulkano::image::{ImageDimensions, StorageImage};
+use vulkano::image::{ImageDimensions, Image};
 use vulkano::format::Format;
 
-let image = StorageImage::new(
-    &memory_allocator,
-    ImageDimensions::Dim2d {
-        width: 1024,
-        height: 1024,
-        array_layers: 1, // images can be arrays of layers
+let image = Image::new(
+    memory_allocator.clone(),
+    ImageCreateInfo {
+        image_type: ImageType::Dim2d,
+        format: Format::R8G8B8A8_UNORM,
+        extent: [1024, 1024, 1],
+        usage: ImageUsage::TRANSFER_DST | ImageUsage::TRANSFER_SRC,
+        ..Default::default()
     },
-    Format::R8G8B8A8_UNORM,
-    Some(queue.queue_family_index()),
+    AllocationCreateInfo {
+        memory_type_filter: MemoryTypeFilter::PREFER_DEVICE,
+        ..Default::default()
+    },
 )
 .unwrap();
 ```
 
-We pass the dimensions of the image and the desired format. The queue family to use is similar to 
-the parameter when creating a buffer. It indicates which queue families are going to access the 
-image.
-
-> **Note**: Images can be made of layers, but for this example we only have one layer. Also, images 
-> have usage flags similar to buffers, but this precise constructor doesn't require them.
+We pass the dimensions of the image and the desired format. Just like buffers, images also need to
+be created with flags that describe how the image will be used, and using it in a way that wasn't
+specified when creating it will result in an error.
 
 Next: [Clearing an image](image_clear.html)

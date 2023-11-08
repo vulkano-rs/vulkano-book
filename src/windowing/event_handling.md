@@ -1,4 +1,4 @@
-# Window events handling
+# Window event handling
 
 Now that everything is initialized, let's configure the main loop to actually draw something on the
 window.
@@ -6,9 +6,6 @@ window.
 First, let's match two additional events:
 
 ```rust
-use winit::event::{Event, WindowEvent};
-use winit::event_loop::ControlFlow;
-
 let mut window_resized = false;
 let mut recreate_swapchain = false;
 
@@ -57,16 +54,13 @@ Event::MainEventsCleared => {
 
         let new_dimensions = window.inner_size();
 
-        let (new_swapchain, new_images) = match swapchain.recreate(SwapchainCreateInfo {
-            image_extent: new_dimensions.into(), // here, "image_extend" will correspond to the window dimensions
-            ..swapchain.create_info()
-        }) {
-            Ok(r) => r,
-            // This error tends to happen when the user is manually resizing the window.
-            // Simply restarting the loop is the easiest way to fix this issue.
-            Err(SwapchainCreationError::ImageExtentNotSupported { .. }) => return,
-            Err(e) => panic!("failed to recreate swapchain: {e}"),
-        };
+        let (new_swapchain, new_images) = swapchain
+            .recreate(SwapchainCreateInfo {
+                // Here, `image_extend` will correspond to the window dimensions.
+                image_extent: new_dimensions.into(),
+                ..swapchain.create_info()
+            })
+            .expect("failed to recreate swapchain: {e}");
         swapchain = new_swapchain;
         let new_framebuffers = get_framebuffers(&new_images, &render_pass);
     }
@@ -85,14 +79,12 @@ if window_resized || recreate_swapchain {
 
     let new_dimensions = window.inner_size();
 
-    let (new_swapchain, new_images) = match swapchain.recreate(SwapchainCreateInfo {
-        image_extent: new_dimensions.into(),
-        ..swapchain.create_info()
-    }) {
-        Ok(r) => r,
-        Err(SwapchainCreationError::ImageExtentNotSupported { .. }) => return,
-        Err(e) => panic!("failed to recreate swapchain: {e}"),
-    };
+    let (new_swapchain, new_images) = swapchain
+        .recreate(SwapchainCreateInfo {
+            image_extent: new_dimensions.into(),
+            ..swapchain.create_info()
+        })
+        .expect("failed to recreate swapchain: {e}");
     swapchain = new_swapchain;
     let new_framebuffers = get_framebuffers(&new_images, &render_pass);
 
@@ -128,11 +120,14 @@ To actually start drawing, the first thing that we need to do is to *acquire* an
 
 ```rust
 use vulkano::swapchain;
+use vulkano::{Validated, VulkanError};
 
 let (image_i, suboptimal, acquire_future) =
-    match swapchain::acquire_next_image(swapchain.clone(), None) {
+    match swapchain::acquire_next_image(swapchain.clone(), None)
+        .map_err(Validated::unwrap)
+    {
         Ok(r) => r,
-        Err(AcquireError::OutOfDate) => {
+        Err(VulkanError::OutOfDate) => {
             recreate_swapchain = true;
             return;
         }
@@ -185,15 +180,16 @@ We are now doing more than just executing a command buffer, so let's do a bit of
 ```rust
 use vulkano::sync::FlushError;
 
-match execution {
+match execution.map_err(Validated::unwrap) {
     Ok(future) => {
-        future.wait(None).unwrap();  // wait for the GPU to finish
+        // Wait for the GPU to finish.
+        future.wait(None).unwrap();
     }
     Err(FlushError::OutOfDate) => {
         recreate_swapchain = true;
     }
     Err(e) => {
-        println!("Failed to flush future: {e}");
+        println!("failed to flush future: {e}");
     }
 }
 ```
@@ -213,7 +209,7 @@ start processing new frames while the GPU is working on older ones.
 To do that, we need to save the created fences and reuse them later. Each stored fence will
 correspond to a new frame that is being processed in advance. You can do it with only one fence
 (check vulkano's [triangle
-example](https://github.com/vulkano-rs/vulkano/blob/v0.33.0/examples/src/bin/triangle.rs) if you
+example](https://github.com/vulkano-rs/vulkano/blob/v0.34.0/examples/src/bin/triangle.rs) if you
 want to do something like that). However, here we will use multiple fences (likewise multiple
 frames in flight), which will make easier for you implement any other synchronization technique
 you want.
@@ -256,8 +252,8 @@ one will not be using the same image, we will wait for the old future to complet
 resources:
 
 ```rust
-// wait for the fence related to this image to finish
-// normally this would be the oldest fence, that most likely have already finished
+// Wait for the fence related to this image to finish. Normally this would be the
+// oldest fence that most likely has already finished.
 if let Some(image_fence) = &fences[image_i as usize] {
     image_fence.wait(None).unwrap();
 }
@@ -268,14 +264,14 @@ future doesn't already exist:
 
 ```rust
 let previous_future = match fences[previous_fence_i as usize].clone() {
-    // Create a NowFuture
+    // Create a `NowFuture`.
     None => {
         let mut now = sync::now(device.clone());
         now.cleanup_finished();
 
         now.boxed()
     }
-    // Use the existing FenceSignalFuture
+    // Use the existing `FenceSignalFuture`.
     Some(fence) => fence.boxed(),
 };
 ```
@@ -301,14 +297,14 @@ let future = previous_future
 And then substitute the old (obsolete) fence in the error handling:
 
 ```rust
-fences[image_i as usize] = match future {
+fences[image_i as usize] = match future.map_err(Validated::unwrap) {
     Ok(value) => Some(Arc::new(value)),
-    Err(FlushError::OutOfDate) => {
+    Err(VulkanError::OutOfDate) => {
         recreate_swapchain = true;
         None
     }
     Err(e) => {
-        println!("Failed to flush future: {e}");
+        println!("failed to flush future: {e}");
         None
     }
 };

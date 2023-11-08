@@ -29,12 +29,14 @@ let work_group_counts = [1024, 1, 1];
 
 command_buffer_builder
     .bind_pipeline_compute(compute_pipeline.clone())
+    .unwrap()
     .bind_descriptor_sets(
         PipelineBindPoint::Compute,
         compute_pipeline.layout().clone(),
         descriptor_set_layout_index as u32,
         descriptor_set,
     )
+    .unwrap()
     .dispatch(work_group_counts)
     .unwrap();
 

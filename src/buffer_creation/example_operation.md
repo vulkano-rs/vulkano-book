@@ -17,13 +17,14 @@ covered in [the previous section](buffer_creation.html).
 ```rust
 let source_content: Vec<i32> = (0..64).collect();
 let source = Buffer::from_iter(
-    &memory_allocator,
+    memory_allocator.clone(),
     BufferCreateInfo {
         usage: BufferUsage::TRANSFER_SRC,
         ..Default::default()
     },
     AllocationCreateInfo {
-        usage: MemoryUsage::Upload,
+        memory_type_filter: MemoryTypeFilter::PREFER_HOST
+            | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
         ..Default::default()
     },
     source_content,
@@ -32,13 +33,14 @@ let source = Buffer::from_iter(
 
 let destination_content: Vec<i32> = (0..64).map(|_| 0).collect();
 let destination = Buffer::from_iter(
-    &memory_allocator,
+    memory_allocator.clone(),
     BufferCreateInfo {
         usage: BufferUsage::TRANSFER_DST,
         ..Default::default()
     },
     AllocationCreateInfo {
-        usage: MemoryUsage::Download,
+        memory_type_filter: MemoryTypeFilter::PREFER_HOST
+            | MemoryTypeFilter::HOST_RANDOM_ACCESS,
         ..Default::default()
     },
     destination_content,
@@ -55,9 +57,9 @@ while the destination buffer contains sixty-four 0s.
 
 Just like buffers, you need an allocator to allocate several command buffers, but you cannot use
 a memory allocator. You have to use a [command buffer 
-allocator](https://docs.rs/vulkano/0.33.0/vulkano/command_buffer/allocator/trait.CommandBufferAllocator.html).
+allocator](https://docs.rs/vulkano/0.34.0/vulkano/command_buffer/allocator/trait.CommandBufferAllocator.html).
 In this case we just use the [standard 
-one](https://docs.rs/vulkano/0.33.0/vulkano/command_buffer/allocator/struct.StandardCommandBufferAllocator.html).
+one](https://docs.rs/vulkano/0.34.0/vulkano/command_buffer/allocator/struct.StandardCommandBufferAllocator.html).
 
 ```rust
 use vulkano::command_buffer::allocator::{
@@ -86,7 +88,7 @@ operation we are trying to achieve.
 Vulkan supports primary and secondary command buffers. Primary command buffers can be sent directly 
 to the GPU while secondary command buffers allow you to store functionality that you can reuse 
 multiple times in primary command buffers. We won't cover secondary command buffers here, but you 
-can read [more about them](https://docs.rs/vulkano/0.33.0/vulkano/command_buffer/index.html).
+can read [more about them](https://docs.rs/vulkano/0.34.0/vulkano/command_buffer/index.html).
 
 > **Note**: Submitting a command to the GPU can take up to several hundred microseconds, which is
 > why we submit as many things as we can at once.
@@ -174,7 +176,7 @@ let future = sync::now(device.clone())
 ```
 
 Signaling a fence returns a future object called
-[`FenceSignalFuture`](https://docs.rs/vulkano/0.33.0/vulkano/sync/future/struct.FenceSignalFuture.html),
+[`FenceSignalFuture`](https://docs.rs/vulkano/0.34.0/vulkano/sync/future/struct.FenceSignalFuture.html),
 that has a special method `.wait()`:
 
 ```rust

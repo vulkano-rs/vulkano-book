@@ -6,20 +6,20 @@ use chapter_code::{vulkano_objects, Vertex2d};
 use vulkano::buffer::{Buffer, BufferCreateInfo, BufferUsage, Subbuffer};
 use vulkano::command_buffer::{CommandBufferExecFuture, PrimaryAutoCommandBuffer};
 use vulkano::device::{Device, DeviceCreateInfo, DeviceExtensions, Queue, QueueCreateInfo};
-use vulkano::image::SwapchainImage;
+use vulkano::image::Image;
 use vulkano::instance::Instance;
-use vulkano::memory::allocator::{AllocationCreateInfo, MemoryUsage};
+use vulkano::memory::allocator::{AllocationCreateInfo, MemoryTypeFilter};
 use vulkano::pipeline::graphics::viewport::Viewport;
 use vulkano::pipeline::GraphicsPipeline;
 use vulkano::render_pass::{Framebuffer, RenderPass};
 use vulkano::shader::ShaderModule;
 use vulkano::swapchain::{
-    self, AcquireError, PresentFuture, Swapchain, SwapchainAcquireFuture, SwapchainCreateInfo,
-    SwapchainCreationError, SwapchainPresentInfo,
+    self, PresentFuture, Surface, Swapchain, SwapchainAcquireFuture, SwapchainCreateInfo,
+    SwapchainPresentInfo,
 };
 use vulkano::sync::future::{FenceSignalFuture, JoinFuture, NowFuture};
-use vulkano::sync::{self, FlushError, GpuFuture};
-use vulkano_win::VkSurfaceBuild;
+use vulkano::sync::{self, GpuFuture};
+use vulkano::{Validated, VulkanError};
 use winit::event_loop::EventLoop;
 use winit::window::{Window, WindowBuilder};
 
@@ -33,7 +33,7 @@ pub struct Renderer {
     device: Arc<Device>,
     queue: Arc<Queue>,
     swapchain: Arc<Swapchain>,
-    images: Vec<Arc<SwapchainImage>>,
+    images: Vec<Arc<Image>>,
     render_pass: Arc<RenderPass>,
     framebuffers: Vec<Arc<Framebuffer>>,
     allocators: Allocators,
@@ -47,18 +47,11 @@ pub struct Renderer {
 
 impl Renderer {
     pub fn initialize(event_loop: &EventLoop<()>) -> Self {
-        let instance = vulkano_objects::instance::get_instance();
+        let instance = vulkano_objects::instance::get_instance(event_loop);
 
-        let surface = WindowBuilder::new()
-            .build_vk_surface(event_loop, instance.clone())
-            .unwrap();
+        let window = Arc::new(WindowBuilder::new().build(event_loop).unwrap());
 
-        let window = surface
-            .object()
-            .unwrap()
-            .clone()
-            .downcast::<Window>()
-            .unwrap();
+        let surface = Surface::from_window(instance.clone(), window.clone()).unwrap();
 
         let device_extensions = DeviceExtensions {
             khr_swapchain: true,
@@ -105,9 +98,9 @@ impl Renderer {
             static_triangle::fs::load(device.clone()).expect("failed to create shader module");
 
         let viewport = Viewport {
-            origin: [0.0, 0.0],
-            dimensions: window.inner_size().into(),
-            depth_range: 0.0..1.0,
+            offset: [0.0, 0.0],
+            extent: window.inner_size().into(),
+            depth_range: 0.0..=1.0,
         };
 
         let pipeline = vulkano_objects::pipeline::create_pipeline(
@@ -150,14 +143,13 @@ impl Renderer {
     }
 
     pub fn recreate_swapchain(&mut self) {
-        let (new_swapchain, new_images) = match self.swapchain.recreate(SwapchainCreateInfo {
-            image_extent: self.window.inner_size().into(),
-            ..self.swapchain.create_info()
-        }) {
-            Ok(r) => r,
-            Err(SwapchainCreationError::ImageExtentNotSupported { .. }) => return,
-            Err(e) => panic!("Failed to recreate swapchain: {:?}", e),
-        };
+        let (new_swapchain, new_images) = self
+            .swapchain
+            .recreate(SwapchainCreateInfo {
+                image_extent: self.window.inner_size().into(),
+                ..self.swapchain.create_info()
+            })
+            .expect("failed to recreate swapchain");
 
         self.swapchain = new_swapchain;
         self.framebuffers = vulkano_objects::swapchain::create_framebuffers_from_swapchain_images(
@@ -168,7 +160,7 @@ impl Renderer {
 
     pub fn handle_window_resize(&mut self) {
         self.recreate_swapchain();
-        self.viewport.dimensions = self.window.inner_size().into();
+        self.viewport.extent = self.window.inner_size().into();
 
         self.pipeline = vulkano_objects::pipeline::create_pipeline(
             self.device.clone(),
@@ -193,7 +185,7 @@ impl Renderer {
 
     pub fn acquire_swapchain_image(
         &self,
-    ) -> Result<(u32, bool, SwapchainAcquireFuture), AcquireError> {
+    ) -> Result<(u32, bool, SwapchainAcquireFuture), Validated<VulkanError>> {
         swapchain::acquire_next_image(self.swapchain.clone(), None)
     }
 
@@ -209,7 +201,7 @@ impl Renderer {
         previous_future: Box<dyn GpuFuture>,
         swapchain_acquire_future: SwapchainAcquireFuture,
         image_i: u32,
-    ) -> Result<Fence, FlushError> {
+    ) -> Result<Fence, Validated<VulkanError>> {
         previous_future
             .join(swapchain_acquire_future)
             .then_execute(
@@ -237,13 +229,14 @@ pub fn create_vertex_buffer(allocators: &Allocators) -> Subbuffer<[Vertex2d]> {
     };
 
     Buffer::from_iter(
-        &allocators.memory,
+        allocators.memory.clone(),
         BufferCreateInfo {
             usage: BufferUsage::VERTEX_BUFFER,
             ..Default::default()
         },
         AllocationCreateInfo {
-            usage: MemoryUsage::Upload,
+            memory_type_filter: MemoryTypeFilter::PREFER_DEVICE
+                | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
             ..Default::default()
         },
         vec![vertex1, vertex2, vertex3].into_iter(),

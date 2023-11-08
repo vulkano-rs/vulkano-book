@@ -21,13 +21,14 @@ the number of elements in the buffer is `1024 * 1024 * 4`.
 
 ```rust
 let buf = Buffer::from_iter(
-    &memory_allocator,
+    memory_allocator.clone(),
     BufferCreateInfo {
         usage: BufferUsage::TRANSFER_DST,
         ..Default::default()
     },
     AllocationCreateInfo {
-        usage: MemoryUsage::Download,
+        memory_type_filter: MemoryTypeFilter::PREFER_HOST
+            | MemoryTypeFilter::HOST_RANDOM_ACCESS,
         ..Default::default()
     },
     (0..1024 * 1024 * 4).map(|_| 0u8),

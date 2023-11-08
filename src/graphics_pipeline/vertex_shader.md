@@ -60,13 +60,14 @@ will be passed as a parameter when we start the drawing operation.
 
 ```rust
 let vertex_buffer = Buffer::from_iter(
-    &memory_allocator,
+    memory_allocator.clone(),
     BufferCreateInfo {
         usage: BufferUsage::VERTEX_BUFFER,
         ..Default::default()
     },
     AllocationCreateInfo {
-        usage: MemoryUsage::Upload,
+        memory_type_filter: MemoryTypeFilter::PREFER_DEVICE
+            | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
         ..Default::default()
     },
     vec![vertex1, vertex2, vertex3],

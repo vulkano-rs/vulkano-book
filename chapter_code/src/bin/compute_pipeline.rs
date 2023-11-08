@@ -11,6 +11,8 @@
 //!
 //! It is not commented, as the explanations can be found in the guide itself.
 
+use std::sync::Arc;
+
 use vulkano::buffer::{Buffer, BufferCreateInfo, BufferUsage};
 use vulkano::command_buffer::allocator::{
     StandardCommandBufferAllocator, StandardCommandBufferAllocatorCreateInfo,
@@ -20,8 +22,12 @@ use vulkano::descriptor_set::allocator::StandardDescriptorSetAllocator;
 use vulkano::descriptor_set::{PersistentDescriptorSet, WriteDescriptorSet};
 use vulkano::device::{Device, DeviceCreateInfo, DeviceExtensions, QueueCreateInfo, QueueFlags};
 use vulkano::instance::{Instance, InstanceCreateInfo};
-use vulkano::memory::allocator::{AllocationCreateInfo, MemoryUsage, StandardMemoryAllocator};
-use vulkano::pipeline::{ComputePipeline, Pipeline, PipelineBindPoint};
+use vulkano::memory::allocator::{AllocationCreateInfo, MemoryTypeFilter, StandardMemoryAllocator};
+use vulkano::pipeline::compute::ComputePipelineCreateInfo;
+use vulkano::pipeline::layout::PipelineDescriptorSetLayoutCreateInfo;
+use vulkano::pipeline::{
+    ComputePipeline, Pipeline, PipelineBindPoint, PipelineLayout, PipelineShaderStageCreateInfo,
+};
 use vulkano::sync::{self, GpuFuture};
 
 fn main() {
@@ -66,17 +72,18 @@ fn main() {
 
     // Introduction to compute operations
 
-    let memory_allocator = StandardMemoryAllocator::new_default(device.clone());
+    let memory_allocator = Arc::new(StandardMemoryAllocator::new_default(device.clone()));
 
     let data_iter = 0..65536u32;
     let data_buffer = Buffer::from_iter(
-        &memory_allocator,
+        memory_allocator.clone(),
         BufferCreateInfo {
             usage: BufferUsage::STORAGE_BUFFER,
             ..Default::default()
         },
         AllocationCreateInfo {
-            usage: MemoryUsage::Upload,
+            memory_type_filter: MemoryTypeFilter::PREFER_DEVICE
+                | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
             ..Default::default()
         },
         data_iter,
@@ -105,16 +112,26 @@ fn main() {
     }
 
     let shader = cs::load(device.clone()).expect("failed to create shader module");
+
+    let cs = shader.entry_point("main").unwrap();
+    let stage = PipelineShaderStageCreateInfo::new(cs);
+    let layout = PipelineLayout::new(
+        device.clone(),
+        PipelineDescriptorSetLayoutCreateInfo::from_stages([&stage])
+            .into_pipeline_layout_create_info(device.clone())
+            .unwrap(),
+    )
+    .unwrap();
+
     let compute_pipeline = ComputePipeline::new(
         device.clone(),
-        shader.entry_point("main").unwrap(),
-        &(),
         None,
-        |_| {},
+        ComputePipelineCreateInfo::stage_layout(stage, layout),
     )
     .expect("failed to create compute pipeline");
 
-    let descriptor_set_allocator = StandardDescriptorSetAllocator::new(device.clone());
+    let descriptor_set_allocator =
+        StandardDescriptorSetAllocator::new(device.clone(), Default::default());
 
     let pipeline_layout = compute_pipeline.layout();
     let descriptor_set_layouts = pipeline_layout.set_layouts();
@@ -127,6 +144,7 @@ fn main() {
         &descriptor_set_allocator,
         descriptor_set_layout.clone(),
         [WriteDescriptorSet::buffer(0, data_buffer.clone())], // 0 is the binding
+        [],
     )
     .unwrap();
 
@@ -146,12 +164,14 @@ fn main() {
 
     command_buffer_builder
         .bind_pipeline_compute(compute_pipeline.clone())
+        .unwrap()
         .bind_descriptor_sets(
             PipelineBindPoint::Compute,
             compute_pipeline.layout().clone(),
             descriptor_set_layout_index as u32,
             descriptor_set,
         )
+        .unwrap()
         .dispatch(work_group_counts)
         .unwrap();
 
