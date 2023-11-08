@@ -8,7 +8,7 @@ As of vulkano version `0.31.0`, the library needs to be explicitly specified by 
 `VulkanLibrary` to the  `Instance` constructor.
 
 For starters, our program will be very simple, so, for now, creating an instance won't need any
-[additional parameters](https://docs.rs/vulkano/0.33.0/vulkano/instance/struct.InstanceCreateInfo.html),
+[additional parameters](https://docs.rs/vulkano/0.34.0/vulkano/instance/struct.InstanceCreateInfo.html),
 so we can create it with default configurations:
 
 ```rust

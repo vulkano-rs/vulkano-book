@@ -79,7 +79,8 @@ let image = Image::new(
 .unwrap();
 ```
 
-We pass the dimensions of the image and the desired format. 
-<!-- TODO: add sentence about usage flags -->
+We pass the dimensions of the image and the desired format. Just like buffers, images also need to
+be created with flags that describe how the image will be used, and using it in a way that wasn't
+specified when creating it will result in an error.
 
 Next: [Clearing an image](image_clear.html)

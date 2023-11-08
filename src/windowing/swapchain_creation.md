@@ -239,6 +239,6 @@ It's good to have `min_image_count` be at least one more than the minimal, to gi
 freedom to the image queue.
 
 For additional information, check the
-[swapchain documentation](https://docs.rs/vulkano/0.33.0/vulkano/swapchain/index.html#swapchains).
+[swapchain documentation](https://docs.rs/vulkano/0.34.0/vulkano/swapchain/index.html#swapchains).
 
 Next: [Other initialization](other_initialization.html)

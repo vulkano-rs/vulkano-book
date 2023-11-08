@@ -125,7 +125,7 @@ To use `vulkano-shaders`, we first have to add a dependency:
 
 ```toml
 # Notice that it uses the same version as vulkano
-vulkano-shaders = "0.33.0"
+vulkano-shaders = "0.34.0"
 ```
 
 > **Note**: `vulkano-shaders` uses the crate `shaderc-sys` for the actual GLSL compilation step. 
@@ -165,25 +165,38 @@ generate several structs and methods, including one named `load`. This is the me
 to use next:
 
 ```rust
-let shader = cs::load(device.clone())
-    .expect("failed to create shader module");
+let shader = cs::load(device.clone()).expect("failed to create shader module");
 ```
 
 This feeds the shader to the Vulkan implementation. The last step to perform at runtime is to
 create a ***compute pipeline*** object from that shader. This is the object that actually describes
-the compute operation that we are going to perform. We won't cover the last three parameters, but
-you can search about them
-[here](https://docs.rs/vulkano/0.33.0/vulkano/pipeline/compute/struct.ComputePipeline.html).
+the compute operation that we are going to perform. Before we can create any kind of pipeline, we
+need to create a ***pipeline layout***, which most notably describes what kinds of resources will
+be bound to the pipeline. We are going to let vulkano auto-generate this layout for us by using
+shader reflection.
+
+> **Note**: Auto-generated pipeline layouts are great for starting out or quick prototyping, but
+> are oftentimes suboptimal. You might be able to optimize better by creating one by hand.
 
 ```rust
-use vulkano::pipeline::ComputePipeline;
+use vulkano::pipeline::compute::ComputePipelineCreateInfo;
+use vulkano::pipeline::layout::PipelineDescriptorSetLayoutCreateInfo;
+use vulkano::pipeline::{ComputePipeline, PipelineLayout, PipelineShaderStageCreateInfo};
+
+let cs = shader.entry_point("main").unwrap();
+let stage = PipelineShaderStageCreateInfo::new(cs);
+let layout = PipelineLayout::new(
+    device.clone(),
+    PipelineDescriptorSetLayoutCreateInfo::from_stages([&stage])
+        .into_pipeline_layout_create_info(device.clone())
+        .unwrap(),
+)
+.unwrap();
 
 let compute_pipeline = ComputePipeline::new(
     device.clone(),
-    shader.entry_point("main").unwrap(),
-    &(),
     None,
-    |_| {},
+    ComputePipelineCreateInfo::stage_layout(stage, layout),
 )
 .expect("failed to create compute pipeline");
 ```

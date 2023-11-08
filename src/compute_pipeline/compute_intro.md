@@ -61,13 +61,14 @@ similar to what we already did twice:
 ```rust
 let data_iter = 0..65536u32;
 let data_buffer = Buffer::from_iter(
-    &memory_allocator,
+    memory_allocator.clone(),
     BufferCreateInfo {
         usage: BufferUsage::STORAGE_BUFFER,
         ..Default::default()
     },
     AllocationCreateInfo {
-        usage: MemoryUsage::Upload,
+        memory_type_filter: MemoryTypeFilter::PERFER_DEVICE
+            | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
         ..Default::default()
     },
     data_iter,

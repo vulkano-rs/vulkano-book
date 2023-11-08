@@ -166,6 +166,7 @@ let set = PersistentDescriptorSet::new(
     &descriptor_set_allocator,
     layout.clone(),
     [WriteDescriptorSet::image_view(0, view.clone())], // 0 is the binding
+    [],
 )
 .unwrap();
 ```

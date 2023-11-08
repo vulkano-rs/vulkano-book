@@ -31,10 +31,10 @@ let render_pass = vulkano::single_pass_renderpass!(
     device.clone(),
     attachments: {
         color: {
-            load: Clear,
-            store: Store,
             format: Format::R8G8B8A8_UNORM,
             samples: 1,
+            load_op: Clear,
+            store_op: Store,
         },
     },
     pass: {
@@ -48,12 +48,13 @@ let render_pass = vulkano::single_pass_renderpass!(
 A render pass is made of **attachments** and **passes**. Here we declare one attachment whose name
 is `color` (the name is arbitrary), and one pass that will use `color` as its single output.
 
-The `load: Clear` line indicates that we want the GPU to *clear* the image when entering the render
-pass (i.e. fill it with a single color), while `store: Store` indicates that we want the GPU to
-actually store the output of our draw commands to the image.
+The `load_op: Clear` line indicates that we want the GPU to *clear* the image when entering the
+render pass (i.e. fill it with a single color), while `store_op: Store` indicates that we want the
+GPU to actually store the output of our draw commands to the image.
 
 > **Note**: It is possible to create temporary images whose content is only relevant inside of a
-> render pass, in which case it is optimal to use `store: DontCare` instead of `store: Store`.
+> render pass, in which case it is optimal to use `store_op: DontCare` instead of
+> `store_op: Store`.
 
 ## Entering the render pass
 
@@ -98,7 +99,9 @@ topic. Be we are using only direct commands, we will leave it as `::Inline`
 As a demonstration, let's just enter a render pass and leave it immediately after:
 
 ```rust
-use vulkano::command_buffer::{RenderPassBeginInfo, SubpassContents};
+use vulkano::command_buffer::{
+    RenderPassBeginInfo, SubpassBeginInfo, SubpassContents, SubpassEndInfo,
+};
 
 let mut builder = AutoCommandBufferBuilder::primary(
     &command_buffer_allocator,
@@ -113,10 +116,13 @@ builder
             clear_values: vec![Some([0.0, 0.0, 1.0, 1.0].into())],
             ..RenderPassBeginInfo::framebuffer(framebuffer.clone())
         },
-        SubpassContents::Inline,
+        SubpassBeginInfo {
+            contents: SubpassContents::Inline,
+            ..Default::default()
+        },
     )
     .unwrap()
-    .end_render_pass()
+    .end_render_pass(SubpassEndInfo::default())
     .unwrap();
 ```
 
