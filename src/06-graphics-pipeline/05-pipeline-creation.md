@@ -1,19 +1,19 @@
 # Putting it all together
 
-In [the vertex input section](vertex_shader.html) we created a buffer named `vertex_buffer` which
+In [the vertex input section](02-vertex-shader.html) we created a buffer named `vertex_buffer` which
 contains the shape of our triangle, and wrote the source code of a *vertex shader* that positions
 vertices on the image.
 
-In [the fragment shader section](fragment_shader.html) we wrote the source code of a
+In [the fragment shader section](03-fragment-shader.html) we wrote the source code of a
 *fragment shader* that fills pixels with a color.
 
-Finally in [the render passes section](render_pass_framebuffer.html) we create a *render pass*
+Finally in [the render passes section](04-render-pass-framebuffer.html) we create a *render pass*
 and a *framebuffer* that contains the target image.
 
 It is now time to put everything together and perform the draw operation!
 
 > **Note**: You can find the [full source code of this chapter
-> here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter_code/src/bin/graphics_pipeline.rs).
+> here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter-code/05-graphics-pipeline/main.rs).
 
 ## Creating a graphics pipeline
 
@@ -131,7 +131,7 @@ let pipeline = {
 
 When we draw, we have the possibility to draw only to a specific rectangle of the screen called a
 ***viewport***. The borders of the viewport will map to the `-1.0` and `1.0` logical coordinates 
-that we covered in [the vertex input section of the guide](vertex_shader.html). Any part of the 
+that we covered in [the vertex input section of the guide](02-vertex-shader.html). Any part of the 
 shape that ends up outside of this rectangle will be discarded.
 
 We configured the pipeline so that we use one specific viewport, and that the state of this
@@ -198,7 +198,7 @@ instancing (we won't cover that here).
 > `draw()` multiple time in a row.
 
 Once we have finished drawing, let's do the same thing as [in the mandelbrot
-example](../images/mandelbrot.html) and write the image to a PNG file.
+example](../05-images/04-mandelbrot.html) and write the image to a PNG file.
 
 To do that, as before, let's first create the buffer:
 
@@ -251,4 +251,4 @@ And here is what you should get:
 <img src="guide-graphics-pipeline-creation-1.png" />
 </center>
 
-Next: [Windowing](../windowing/introduction.html)
+Next: [Windowing](../07-windowing/01-introduction.html)

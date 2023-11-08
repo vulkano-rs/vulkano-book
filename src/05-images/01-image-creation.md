@@ -1,7 +1,7 @@
 # Creating an image
 
-In [the buffers creation section of the guide](../buffer_creation/buffer_creation.html) we saw that in order for
-the GPU to access data we had to put it in a *buffer*.
+In [the buffers creation section of the guide](../03-buffer-creation/01-buffer-creation.html) we
+saw that in order for the GPU to access data we had to put it in a *buffer*.
 This is not exactly true, as there is an alternative which are ***images***.
 
 An *image* in the context of Vulkan designates a multidimensional array of pixels.
@@ -83,4 +83,4 @@ We pass the dimensions of the image and the desired format. Just like buffers, i
 be created with flags that describe how the image will be used, and using it in a way that wasn't
 specified when creating it will result in an error.
 
-Next: [Clearing an image](image_clear.html)
+Next: [Clearing an image](02-image-clear.html)

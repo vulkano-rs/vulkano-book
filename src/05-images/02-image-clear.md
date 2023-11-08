@@ -56,4 +56,4 @@ performed on the image (with the exception of memory copies) treat the image as 
 floating-point values. This is the reason why we pass `[0.0, 0.0, 1.0, 1.0]`. The values `1.0` will
 in fact be stored as `255` in memory.
 
-Next: [Exporting the result](image_export.html)
+Next: [Exporting the result](03-image-export.html)

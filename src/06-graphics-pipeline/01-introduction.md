@@ -6,8 +6,8 @@ Up until now, we have created command buffers that perform two kind of operation
 - Compute operations (dispatching a compute shader).
 
 While these two kind of operations are sufficient in order to use the power of the GPU for
-parallel calculations (as seen in [the Mandelbrot example](../images/mandelbrot.html)), there is a third
-kind of operations: graphical operations.
+parallel calculations (as seen in [the Mandelbrot example](../05-images/04-mandelbrot.html)), there
+is a third kind of operations: graphical operations.
 
 Before they were used for general-purpose calculations, GPUs were used for graphics (hence their
 name). To benefit from this, GPUs provide to developers a specialized well-optimized series of 
@@ -30,7 +30,8 @@ In order to start a graphical operation (i.e. an operation that uses the graphic
 will need the following elements:
 
 - A **graphics pipeline object** that describes the way the GPU should behave, similar to the
-  way [a compute pipeline object](../compute_pipeline/compute_pipeline.html) describes a compute operation.
+  way [a compute pipeline object](../04-compute-pipeline/02-compute-pipeline.html) describes a
+  compute operation.
 - One or multiple buffers containing the shape of the object we want to draw.
 - A ***framebuffer*** object, which is a collection of images to write to.
 - Just like compute pipelines, we can also pass descriptor sets (and push constants, which we
@@ -53,4 +54,4 @@ options that allows one to further configure the behavior of the graphics card.
 
 The next sections will be dedicated to covering graphics pipeline in more details.
 
-Next: [Vertex input](vertex_shader.html)
+Next: [Vertex input](02-vertex-shader.html)

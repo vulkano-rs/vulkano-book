@@ -118,4 +118,4 @@ GPU knows how to position our shape.
 ## After the vertex shader
 
 After the vertex shader has run on each vertex, the GPU knows where our shape is located on the
-screen. It then proceeds to call [the fragment shader](fragment_shader.html).
+screen. It then proceeds to call [the fragment shader](03-fragment-shader.html).

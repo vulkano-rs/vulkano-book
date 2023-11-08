@@ -7,12 +7,12 @@ What we are going to ask in this example is very simple: we will ask it to copy 
 buffer to another.
 
 > **Note**: You can find the [full source code of this chapter
-> here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter_code/src/bin/buffer_creation.rs).
+> here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter-code/03-buffer-creation/main.rs).
 
 ## Creating the buffers
 
 The first step is to create two CPU-accessible buffers: the source and the destination. This was 
-covered in [the previous section](buffer_creation.html).
+covered in [the previous section](01-buffer-creation.html).
 
 ```rust
 let source_content: Vec<i32> = (0..64).collect();
@@ -118,7 +118,7 @@ let command_buffer = builder.build().unwrap();
 
 As you can see, it is very straight-forward. We create a *builder*, add a copy command to it with
 `copy_buffer`, then turn that builder into an actual command buffer with `.build()`. Like we saw in
-[the buffers creation section](buffer_creation.html), we call `.clone()` multiple times, but we
+[the buffers creation section](01-buffer-creation.html), we call `.clone()` multiple times, but we
 only clone `Arc`s.
 
 One thing to notice is that the `AutoCommandBufferBuilder::primary()` method takes as parameter a 
@@ -155,7 +155,7 @@ make an operation start only after a previous one is finished, while reducing th
 communication operations between the CPU and the GPU.
 
 After submitting the command buffer, we might be tempted to try to read the content of the
-`destination` buffer as demonstrated in [the previous section](buffer_creation.html).
+`destination` buffer as demonstrated in [the previous section](01-buffer-creation.html).
 However, because the CPU and GPU are now executing in parallel, calling `destination.read()`
 now may sometimes return an error because the buffer could still be in use by the GPU.
 
@@ -193,4 +193,4 @@ assert_eq!(&*src_content, &*destination_content);
 println!("Everything succeeded!");
 ```
 
-Next: [Introduction to compute operations](../compute_pipeline/compute_intro.html)
+Next: [Introduction to compute operations](../04-compute-pipeline/01-compute-intro.html)

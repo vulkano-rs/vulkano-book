@@ -8,7 +8,7 @@ Strictly speaking, creating a window and handling events is **not** covered by v
 however, is capable of rendering to window(s).
 
 > **Note**: You can find the [full source code of this chapter
-> here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter_code/src/bin/windowing.rs).
+> here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter-code/07-windowing/main.rs).
 
 ## Creating a window
 
@@ -107,4 +107,4 @@ Right now, all we're doing is creating a window and keeping our program alive fo
 window isn't closed. The next section will show how to initialize what is called a *swapchain* on
 the window's surface.
 
-Next: [Swapchain creation](swapchain_creation.html)
+Next: [Swapchain creation](02-swapchain-creation.html)

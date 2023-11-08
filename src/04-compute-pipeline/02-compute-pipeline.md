@@ -78,7 +78,7 @@ layout(set = 0, binding = 0) buffer Data {
 ```
 
 This declares a *descriptor*, which we are going to cover in more details [in the next
-section](descriptor_sets.html). In particular, we declare a buffer whose name is `buf` and that
+section](03-descriptor-sets.html). In particular, we declare a buffer whose name is `buf` and that
 we are going to access in our code.
 
 The content of the buffer is an unsized array of `uint`s. A `uint` is always similar to a `u32`
@@ -202,4 +202,4 @@ let compute_pipeline = ComputePipeline::new(
 ```
 
 Before invoking that compute pipeline, we need to bind a buffer to it. This is covered by [the
-next section](descriptor_sets.html).
+next section](03-descriptor-sets.html).

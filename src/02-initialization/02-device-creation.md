@@ -1,6 +1,6 @@
 # Device creation
 
-In [the previous section](initialization.html) we created an instance and chose a physical
+In [the previous section](01-initialization.html) we created an instance and chose a physical
 device from this instance.
 
 But initialization isn't finished yet. Before being able to do anything, we have to create a
@@ -86,4 +86,4 @@ let queue = queues.next().unwrap();
 We now have our `device` and our `queue`, which means that we are ready to ask the GPU to perform
 operations.
 
-Next: [Creating a buffer](../buffer_creation/buffer_creation.html)
+Next: [Creating a buffer](../03-buffer-creation/01-buffer-creation.html)

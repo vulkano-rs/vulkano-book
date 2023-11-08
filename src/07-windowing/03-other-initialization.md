@@ -310,9 +310,9 @@ fn main() {
 ```
 
 If you feel lost in all the code, feel free to take a look at [full source code 
-here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter_code/src/bin/windowing.rs).
+here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter-code/07-windowing/main.rs).
 
 The initialization is finally complete! Next, we will start working on the event loop and 
 programming the functionality of each frame.
 
-Next: [Event handling](event_handling.html)
+Next: [Event handling](04-event-handling.html)

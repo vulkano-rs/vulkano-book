@@ -126,5 +126,5 @@ builder
     .unwrap();
 ```
 
-The [next section](pipeline_creation.html) will introduce the `draw` command, which will
+The [next section](05-pipeline-creation.html) will introduce the `draw` command, which will
 be inserted between `begin_render_pass` and `end_render_pass`.

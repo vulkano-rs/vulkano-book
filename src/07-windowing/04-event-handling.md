@@ -320,7 +320,7 @@ In the end, we finally achieved a fully working triangle. The next step is to st
 changing it properties, but that's something for the next chapter.
 
 If you have any problems, take a look at the [full source
-code](https://github.com/vulkano-rs/vulkano-book/blob/master/chapter_code/src/bin/windowing.rs), and
-see if you have missed anything.
+code](https://github.com/vulkano-rs/vulkano-book/blob/master/chapter-code/07-windowing/main.rs),
+and see if you have missed anything.
 
 Next: (coming soon).

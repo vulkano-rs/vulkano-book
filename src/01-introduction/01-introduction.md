@@ -64,4 +64,4 @@ Note: If you run into any issues with this guide, please [open an
 issue](https://github.com/vulkano-rs/vulkano-book/issues). If you have issues with vulkano itself, 
 please also [open an issue](https://github.com/vulkano-rs/vulkano/issues).
 
-You are now ready to [get started](../initialization/initialization.html)!
+You are now ready to [get started](../02-initialization/01-initialization.html)!

@@ -4,13 +4,13 @@ This section isn't going to introduce any new concept, but will show a real worl
 a compute shader to write a [Mandelbrot set](https://en.wikipedia.org/wiki/Mandelbrot_set) to an
 image.
 
-Just like in [the introduction to compute pipelines](../compute_pipeline/compute_pipeline.html), we need to write
-some GLSL code and create a compute pipeline. This is done with the `vulkano_shader::shader!` 
-macro, as explained in that section. Each invocation of the `main` function of the shader will 
-write one pixel.
+Just like in [the introduction to compute
+pipelines](../04-compute-pipeline/02-compute-pipeline.html), we need to write some GLSL code and
+create a compute pipeline. This is done with the `vulkano_shader::shader!` macro, as explained in
+that section. Each invocation of the `main` function of the shader will write one pixel.
 
 > **Note**: You can find the [full source code of this section
-> here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter_code/src/bin/images/mandelbrot.rs).
+> here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter-code/05-images/mandelbrot.rs).
 
 ## The shader
 
@@ -120,7 +120,7 @@ their parameters into respectively a `vec4`, a `vec3` and a `ivec2`.
 `vec3(i)` is a shortcut for `vec3(i, i, i)`.
 
 Writing the pixel of an image must be done with the `imageStore` function. As explained in [a
-previous section](image_clear.html) the content of the image is opaque and is always treated as
+previous section](02-image-clear.html) the content of the image is opaque and is always treated as
 floating-points, even though we know that its memory contains integers.
 
 ## Calling this shader
@@ -158,7 +158,7 @@ let view = ImageView::new_default(image.clone()).unwrap();
 ```
 
 Now, let's create the descriptor set by adding the image view, like we did 
-[earlier](../compute_pipeline/descriptor_sets.html):
+[earlier](../04-compute-pipeline/03-descriptor-sets.html):
 
 ```rust
 let layout = compute_pipeline.layout().set_layouts().get(0).unwrap();
@@ -220,7 +220,7 @@ builder
 let command_buffer = builder.build().unwrap();
 ```
 
-And finally just like in [the previous section](image_export.html) we execute the command buffer
+And finally just like in [the previous section](03-image-export.html) we execute the command buffer
 and export the image as a PNG file:
 
 ```rust
@@ -245,4 +245,4 @@ And here is what you should get:
 <img src="guide-mandelbrot-1.png" />
 </center>
 
-Next: [Graphics pipeline introduction](../graphics_pipeline/introduction.html)
+Next: [Graphics pipeline introduction](../06-graphics-pipeline/01-introduction.html)

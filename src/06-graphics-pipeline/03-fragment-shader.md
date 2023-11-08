@@ -35,8 +35,8 @@ and its type. Drawing to multiple images at once is an advanced topic that isn't
 
 The `main()` function is executed once for each pixel covered by the triangle and must write in
 `f_color` the value that we want to write to the target image. As explained in [a previous
-section](/guide/image-clear) these values are normalized, in other words the value `1.0` will in
-reality write `255` in memory. In this example since our target image contains colors, we write the
-color red.
+section](../05-images/02-image-clear.html) these values are normalized, in other words the value
+`1.0` will in reality write `255` in memory. In this example since our target image contains
+colors, we write the color red.
 
-Next: [Render passes and framebuffers](render_pass_framebuffer.html)
+Next: [Render passes and framebuffers](04-render-pass-framebuffer.html)
