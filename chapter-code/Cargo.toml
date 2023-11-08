@@ -1,0 +1,34 @@
+[package]
+name = "chapter-code"
+version = "0.0.0"
+edition = "2021"
+
+[[bin]]
+name = "buffer-creation"
+path = "03-buffer-creation/main.rs"
+
+[[bin]]
+name = "compute-pipeline"
+path = "04-compute-pipeline/main.rs"
+
+[[bin]]
+name = "images"
+path = "05-images/main.rs"
+
+[[bin]]
+name = "graphics-pipeline"
+path = "06-graphics-pipeline/main.rs"
+
+[[bin]]
+name = "windowing"
+path = "07-windowing/main.rs"
+
+[dependencies]
+vulkano = "0.34.0"
+vulkano-shaders = "0.34.0"
+image = "0.24.0"
+winit = "0.28.0"
+rand = "0.8.5"
+
+[profile.dev]
+opt-level = 1
