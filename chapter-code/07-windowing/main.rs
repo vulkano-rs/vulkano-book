@@ -337,7 +337,7 @@ fn main() {
                 | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
             ..Default::default()
         },
-        vec![vertex1, vertex2, vertex3].into_iter(),
+        vec![vertex1, vertex2, vertex3],
     )
     .unwrap();
 
