@@ -16,7 +16,8 @@ let memory_allocator = Arc::new(StandardMemoryAllocator::new_default(device.clon
 
 Since `device` is actually an `Arc<Device>`, the call to `.clone()` only clones the `Arc`
 which isn't expensive. You should get used to passing the device as a parameter, as you will
-need to do so for most of the Vulkan objects that you create. We encapsulate the memory allocator with an atomic reference counter since `Buffer::from_data` requires an `Arc`.
+need to do so for most of the Vulkan objects that you create. We encapsulate the memory allocator
+with an atomic reference counter since `Buffer::from_data` requires an `Arc`.
 
 # Creating a buffer
 
@@ -33,17 +34,17 @@ A Vulkan implementation might (and most often does) have multiple *memory types*
 suited to certain tasks. There are many possible arrangements of memory types a Vulkan 
 implementation might have, and picking the right one is important to ensure most optimal performance.
 
-When allocating memory for a buffer in vulkano, you have to provide a **memory type filter**, which 
-tells the memory allocator which memory types it should prefer, and which ones it should avoid, 
-when picking the right one. For example, if you want to continuously upload data to the GPU, you 
-should use `MemoryTypeFilter::PREFER_DEVICE | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE`; on the 
+When allocating memory for a buffer in vulkano, you have to provide a ***memory type filter***, 
+which tells the memory allocator which memory types it should prefer, and which ones it should 
+avoid, when picking the right one. For example, if you want to continuously upload data to the GPU, 
+you should use `MemoryTypeFilter::PREFER_DEVICE | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE`; on the 
 other hand, if you have some data that will largely remain visible only to the GPU, using 
 `MemoryTypeFilter::PREFER_DEVICE` brings increased performance at the cost of more complicated 
 data access from the CPU. For staging buffers, you should use 
 `MemoryTypeFilter::PREFER_HOST | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE`.
 
-the simplest way to create a buffer is to create it in CPU-accessible memory, by using 
-`MemoryTypeFilter::HOST_SEQUENTIAL_WRITE` or `MemoryTypeFilter::HOST_ACCESS_RANDOM`, together with 
+The simplest way to create a buffer is to create it in CPU-accessible memory, by using 
+`MemoryTypeFilter::HOST_SEQUENTIAL_WRITE` or `MemoryTypeFilter::HOST_RANDOM_ACCESS`, together with 
 one of the other filters depending of whether host or device-local memory is preferred.
 
 ```rust
@@ -67,7 +68,8 @@ let buffer = Buffer::from_data(
 .expect("failed to create buffer");
 ```
 
-We have to indicate several things when creating the buffer. The first parameter is an `Arc` of the memory allocator to use. 
+We have to indicate several things when creating the buffer. The first parameter is an `Arc` of the
+memory allocator to use. 
 
 The second parameter is the create info for the buffer. The only field that you have to override
 is [the usage for which we are creating the
@@ -76,9 +78,9 @@ the implementation perform some optimizations. Trying to use a buffer in a way t
 indicated when creating it will result in an error. For the sake of the example, we just create a 
 buffer that supports being used as a uniform buffer.
 
-The third parameter is the create info for the allocation. The field of interest is 
-[the memory type filter](https://docs.rs/vulkano/0.34.0/vulkano/memory/allocator/struct.MemoryTypeFilter.html). When
-creating a CPU-accessible buffer, you will most commonly use 
+The third parameter is the create info for the allocation. The field of interest is [the memory 
+type filter](https://docs.rs/vulkano/0.34.0/vulkano/memory/allocator/struct.MemoryTypeFilter.html). 
+When creating a CPU-accessible buffer, you will most commonly use 
 `MemoryTypeFilter::PREFER_HOST | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE`, but in cases 
 where the application is writing data through this buffer continuously, using 
 `MemoryTypeFilter::PREFER_HOST | MemoryTypeFilter::HOST_RANDOM_ACCESS` is preferred as it may 
@@ -140,8 +142,8 @@ order to handle this, `Buffer` provides a `from_iter` constructor that takes an 
 data as the last parameter, instead of the data itself.
 
 In the example below, we create a buffer that contains the value `5` of type `u8`, 128 times. The
-type of the content of the buffer is `[u8]`, which, in Rust, represents an array of `u8`s whose size
-is only known at runtime.
+type of the content of the buffer is `[u8]`, which, in Rust, represents an array of `u8`s whose 
+size is only known at runtime.
 
 ```rust
 let iter = (0..128).map(|_| 5u8);

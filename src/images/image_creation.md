@@ -55,7 +55,8 @@ if you are confused, as we will only use the most simple formats in this guide.
 
 ## Image creation
 
-Similar to buffers, images are created by providing information about the image and allocation. However, unlike buffers, images always begin in an uninitialized state.
+Similar to buffers, images are created by providing information about the image and allocation.
+However, unlike buffers, images always begin in an uninitialized state.
 
 ```rust
 use vulkano::image::{ImageDimensions, Image};
