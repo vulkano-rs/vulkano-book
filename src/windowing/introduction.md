@@ -35,7 +35,7 @@ use winit::event_loop::EventLoop;
 let event_loop = EventLoop::new();  // ignore this for now
 
 let library = VulkanLibrary::new().expect("no local Vulkan library/DLL");
-let required_extensions = Surface::required_extensions(&library);
+let required_extensions = Surface::required_extensions(&event_loop);
 let instance = Instance::new(
     library,
     InstanceCreateInfo {
