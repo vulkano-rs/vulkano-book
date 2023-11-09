@@ -8,8 +8,8 @@
 ## Running the chapter code
 
 ```
-cd chapter_code
-cargo run --bin <insert_chapter_name>
+cd chapter-code
+cargo run --bin <chapter>
 ```
 
 ## License
