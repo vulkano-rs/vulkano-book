@@ -346,7 +346,7 @@ fn main() {
 
     let mut viewport = Viewport {
         offset: [0.0, 0.0],
-        extent: [0.0, 0.0],
+        extent: window.inner_size().into(),
         depth_range: 0.0..=1.0,
     };
 
