@@ -36,9 +36,9 @@ This makes using a GPU much easier than if you had to manually control everythin
 still need to be aware that your program will run multiple times in parallel, because it has
 consequences on what you can do without causing data races.
 
-## Example in this guide
+## Example in this book
 
-For the purpose of this guide, we are going to do something very simple: we are going to multiply
+For the purpose of this book, we are going to do something very simple: we are going to multiply
 65536 values by the constant 12. Even though this doesn't serve any purpose, it is a good starting
 point example. Most real-world usages of the GPU involve complex mathematical algorithms, and thus
 are not really appropriate for a tutorial.
@@ -82,5 +82,5 @@ perform the calculation on each element.
 Although notice that we're using `STORAGE_BUFFER` usage this time, since the buffer will be used
 in the compute shader.
 
-[The next section of the guide](02-compute-pipeline.html) will indicate how to actually code this
+[The next section of the book](02-compute-pipeline.html) will indicate how to actually code this
 operation.

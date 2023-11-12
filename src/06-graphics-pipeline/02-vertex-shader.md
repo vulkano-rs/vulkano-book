@@ -10,7 +10,7 @@ programming the most common shapes that one will need to work with are triangles
 > to use other polygons, but this is a more advanced topic.
 
 Each triangle is made of three vertices, and the shape of an object is just a collection of
-vertices linked together to form triangles. For the purpose of this guide, we are only going to
+vertices linked together to form triangles. For the purpose of this book, we are only going to
 draw a single triangle first.
 
 The first step to describe a shape with vulkano is to create a struct named `MyVertex` (the actual
@@ -39,7 +39,7 @@ origin is at the center of the image.
 
 When we give positions to Vulkan, we need to use its coordinate system.
 
-In this guide we are going to draw only a single triangle for now. Let's pick a shape for it,
+In this book we are going to draw only a single triangle for now. Let's pick a shape for it,
 for example this one:
 
 <center><object data="guide-vertex-input-2.svg"></object></center>

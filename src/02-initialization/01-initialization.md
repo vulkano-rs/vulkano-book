@@ -24,7 +24,7 @@ Like many other functions in vulkano, creating an instance returns a `Result`. I
 available on the system, this result will contain an error. For the sake of this example we call
 `expect` on the `Result`, which prints a message to stderr and terminates the application if it
 contains an error. In a real game or application you should handle that situation in a nicer way,
-for example by opening a dialog box with an explanation. This is out of scope of this guide.
+for example by opening a dialog box with an explanation. This is out of scope of this book.
 
 Before going further you can try your code by running:
 
@@ -42,7 +42,7 @@ In reality a physical device can be a dedicated graphics card, but also an integ
 processor or a software implementation. It can be basically anything that allows running Vulkan
 operations.
 
-As of the writing of this guide, it is not yet possible to use multiple devices simultaneously
+As of the writing of this book, it is not yet possible to use multiple devices simultaneously
 in an efficient way (eg. SLI/Crossfire). You *can* use multiple devices simultaneously in the same
 program, but there is not much point in doing so because you cannot share anything between them.
 Consequently the best thing to do in practice is to choose one physical device which is going to 

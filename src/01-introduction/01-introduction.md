@@ -1,24 +1,24 @@
 # Introduction
 
-Welcome to the vulkano guide! This guide will cover the basics of Vulkan and vulkano, and will help 
+Welcome to the vulkano book! This guide will cover the basics of Vulkan and vulkano, and will help 
 you get started with interfacing with a GPU.
 
 It will teach you the basics of graphics programming in the sense that you will know how to draw 
-objects on the screen. However, this guide doesn't cover actual graphics programming techniques, 
+objects on the screen. However, this book doesn't cover actual graphics programming techniques, 
 such as loading a 3D model or adding realistic lighting to a scene. At this point, the examples in 
-the guide are very basic, but we will be adding more comprehensive tutorials in the future.
+the book are very basic, but we will be adding more comprehensive tutorials in the future.
 
 We will assume that you are familiar with the Rust programming language. If you are not, you should 
 definitely [learn it first](https://www.rust-lang.org/documentation.html)!
 
-An excellent way to learn is to read examples. On top of this guide, you should familiarize 
+An excellent way to learn is to read examples. On top of this book, you should familiarize 
 yourself with [vulkano examples](https://github.com/vulkano-rs/vulkano/tree/master/examples). To 
 view the current release's examples you'll need to switch to a version tag. On the branch dropdown 
 click the tags tab. There you'll find all released versions. Master branch will contain examples 
 that are updated continuously to match changes that are unreleased. You should only use the master 
 branch if you are using vulkano as a git dependency.
 
-To contribute to this guide, you can create a pull request at 
+To contribute to this book, you can create a pull request at 
 [vulkano-book](https://github.com/vulkano-rs/vulkano-book) repository.
 
 ## Quick glossary
@@ -60,7 +60,7 @@ optimization.
 opt-level = 1 
 ```
 
-Note: If you run into any issues with this guide, please [open an 
+Note: If you run into any issues with this book, please [open an 
 issue](https://github.com/vulkano-rs/vulkano-book/issues). If you have issues with vulkano itself, 
 please also [open an issue](https://github.com/vulkano-rs/vulkano/issues).
 

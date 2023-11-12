@@ -131,7 +131,7 @@ let pipeline = {
 
 When we draw, we have the possibility to draw only to a specific rectangle of the screen called a
 ***viewport***. The borders of the viewport will map to the `-1.0` and `1.0` logical coordinates 
-that we covered in [the vertex input section of the guide](02-vertex-shader.html). Any part of the 
+that we covered in [the vertex input section of the book](02-vertex-shader.html). Any part of the 
 shape that ends up outside of this rectangle will be discarded.
 
 We configured the pipeline so that we use one specific viewport, and that the state of this

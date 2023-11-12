@@ -20,7 +20,7 @@ This is done in two steps:
 But first, we need to write the source code of the operation. The GLSL language looks a lot like
 the C programming language, but has some differences.
 
-This guide is not going to cover teaching you GLSL, as it is an entire programming language. As 
+This book is not going to cover teaching you GLSL, as it is an entire programming language. As 
 with many programming languages, the easiest way to learn GLSL is by looking at examples.
 
 Let's take a look at some GLSL that takes each element of a buffer and multiplies it by 12:

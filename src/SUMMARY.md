@@ -6,7 +6,7 @@
 
 <!-- TODO: Do something about the draft chapters while keeping the numbering. --->
 
-- [The Guide]()
+- [The book]()
   - [Introduction](01-introduction/01-introduction.md)
 
 - [Initialization]()

@@ -1,6 +1,6 @@
 # Chapter source code
 
-This folder contains the source code used in the guide.
+This folder contains the source code used in the book.
 
 ## Viewing the source code
 

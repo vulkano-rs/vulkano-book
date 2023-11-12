@@ -1,7 +1,7 @@
 //! This is the source code of the "Drawing a fractal with a compute shader" subchapter
 //! from the "Using images" chapter at http://vulkano.rs.
 //!
-//! It is not commented, as the explanations can be found in the guide itself.
+//! It is not commented, as the explanations can be found in the book itself.
 
 use std::sync::Arc;
 

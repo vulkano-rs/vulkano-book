@@ -1,6 +1,6 @@
 # Creating an image
 
-In [the buffers creation section of the guide](../03-buffer-creation/01-buffer-creation.html) we
+In [the buffers creation section of the book](../03-buffer-creation/01-buffer-creation.html) we
 saw that in order for the GPU to access data we had to put it in a *buffer*.
 This is not exactly true, as there is an alternative which are ***images***.
 
@@ -51,7 +51,7 @@ But with the format `A2R10G10B10_SSCALED_PACK32`, you have all four components. 
 the name of each format corresponds to the memory layout of the four components. For example with
 `B10G11R11_UFLOAT_PACK32`, each pixel is 32 bits long where the first 10 bits is the blue component,
 the next 11 bits are the green component, and the last 11 bits are the red component. Don't worry
-if you are confused, as we will only use the most simple formats in this guide.
+if you are confused, as we will only use the most simple formats in this book.
 
 ## Image creation
 
