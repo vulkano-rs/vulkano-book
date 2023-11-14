@@ -37,7 +37,7 @@ implementation might have, and picking the right one is important to ensure most
 When allocating memory for a buffer in vulkano, you have to provide a ***memory type filter***, 
 which tells the memory allocator which memory types it should prefer, and which ones it should 
 avoid, when picking the right one. For example, if you want to continuously upload data to the GPU, 
-you should use `MemoryTypeFilter::PREFER_DEVICE | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE`; on the 
+you should use `MemoryTypeFilter::PREFER_HOST | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE`; on the 
 other hand, if you have some data that will largely remain visible only to the GPU, using 
 `MemoryTypeFilter::PREFER_DEVICE` brings increased performance at the cost of more complicated 
 data access from the CPU. For staging buffers, you should use 
@@ -45,7 +45,7 @@ data access from the CPU. For staging buffers, you should use
 
 The simplest way to create a buffer is to create it in CPU-accessible memory, by using 
 `MemoryTypeFilter::HOST_SEQUENTIAL_WRITE` or `MemoryTypeFilter::HOST_RANDOM_ACCESS`, together with 
-one of the other filters depending of whether host or device-local memory is preferred.
+one of the other filters depending on whether host or device-local memory is preferred.
 
 ```rust
 use vulkano::buffer::{Buffer, BufferCreateInfo, BufferUsage};
@@ -59,7 +59,7 @@ let buffer = Buffer::from_data(
         ..Default::default()
     },
     AllocationCreateInfo {
-        memory_type_filter: MemoryTypeFilter::PREFER_DEVICE
+        memory_type_filter: MemoryTypeFilter::PREFER_HOST
             | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
         ..Default::default()
     },
@@ -124,7 +124,7 @@ let buffer = Buffer::from_data(
         ..Default::default()
     },
     AllocationCreateInfo {
-        memory_type_filter: MemoryTypeFilter::PREFER_DEVICE
+        memory_type_filter: MemoryTypeFilter::PREFER_HOST
             | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
         ..Default::default()
     },
@@ -154,7 +154,7 @@ let buffer = Buffer::from_iter(
         ..Default::default()
     },
     AllocationCreateInfo {
-        memory_type_filter: MemoryTypeFilter::PREFER_DEVICE
+        memory_type_filter: MemoryTypeFilter::PREFER_HOST
             | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE,
         ..Default::default()
     },
