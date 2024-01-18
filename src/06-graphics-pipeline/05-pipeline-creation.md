@@ -13,7 +13,7 @@ and a *framebuffer* that contains the target image.
 It is now time to put everything together and perform the draw operation!
 
 > **Note**: You can find the [full source code of this chapter
-> here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter-code/05-graphics-pipeline/main.rs).
+> here](https://github.com/vulkano-rs/vulkano-book/blob/main/chapter-code/06-graphics-pipeline/main.rs).
 
 ## Creating a graphics pipeline
 
