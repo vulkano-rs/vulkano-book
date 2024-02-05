@@ -199,7 +199,7 @@ fn main() {
     let mut viewport = Viewport {
         origin: [0.0, 0.0],
         dimensions: window.inner_size().into(),
-        depth_range: 0.0..1.0,
+        depth_range: 0.0..=1.0,
     };
 
     let pipeline = get_pipeline(

@@ -91,7 +91,7 @@ if window_resized || recreate_swapchain {
     if window_resized {
         window_resized = false;
 
-        viewport.dimensions = new_dimensions.into();
+        viewport.extent = new_dimensions.into();
         let new_pipeline = get_pipeline(
             device.clone(),
             vs.clone(),
