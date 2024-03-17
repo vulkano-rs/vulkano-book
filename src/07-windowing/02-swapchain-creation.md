@@ -206,12 +206,10 @@ transparency (composite alpha), and the format of the images.
 ```rust
 let dimensions = window.inner_size();
 let composite_alpha = caps.supported_composite_alpha.into_iter().next().unwrap();
-let image_format = Some(
-    physical_device
-        .surface_formats(&surface, Default::default())
-        .unwrap()[0]
-        .0,
-);
+let image_format =  physical_device
+    .surface_formats(&surface, Default::default())
+    .unwrap()[0]
+    .0;
 ```
 
 Combining everything, we can create the swapchain:
