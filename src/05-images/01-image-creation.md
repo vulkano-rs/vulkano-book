@@ -59,7 +59,7 @@ Similar to buffers, images are created by providing information about the image 
 However, unlike buffers, images always begin in an uninitialized state.
 
 ```rust
-use vulkano::image::{ImageDimensions, Image};
+use vulkano::image::{Image, ImageCreateInfo, ImageType, ImageUsage};
 use vulkano::format::Format;
 
 let image = Image::new(
