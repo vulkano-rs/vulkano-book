@@ -29,7 +29,7 @@ pass them on to the instance creation:
 
 ```rust
 use vulkano::instance::{Instance, InstanceCreateInfo};
-use vulkano::swpchain::Surface;
+use vulkano::swapchain::Surface;
 use winit::event_loop::EventLoop;
 
 let event_loop = EventLoop::new();  // ignore this for now
