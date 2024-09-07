@@ -178,14 +178,14 @@ drawing and the image is ready for display. Don't forget to add a fence and flus
 We are now doing more than just executing a command buffer, so let's do a bit of error handling:
 
 ```rust
-use vulkano::sync::FlushError;
+use vulkano::sync::VulkanError;
 
 match execution.map_err(Validated::unwrap) {
     Ok(future) => {
         // Wait for the GPU to finish.
         future.wait(None).unwrap();
     }
-    Err(FlushError::OutOfDate) => {
+    Err(VulkanError::OutOfDate) => {
         recreate_swapchain = true;
     }
     Err(e) => {
