@@ -178,7 +178,7 @@ drawing and the image is ready for display. Don't forget to add a fence and flus
 We are now doing more than just executing a command buffer, so let's do a bit of error handling:
 
 ```rust
-use vulkano::sync::VulkanError;
+use vulkano::VulkanError;
 
 match execution.map_err(Validated::unwrap) {
     Ok(future) => {
