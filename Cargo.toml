@@ -1,0 +1,7 @@
+[workspace]
+resolver = "2"
+members = ["chapter-code"]
+default-members = ["chapter-code"]
+
+[profile.dev]
+opt-level = 1

@@ -29,6 +29,3 @@ vulkano-shaders = "0.34.0"
 image = "0.24.0"
 winit = "0.28.0"
 rand = "0.8.5"
-
-[profile.dev]
-opt-level = 1
