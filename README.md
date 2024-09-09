@@ -8,7 +8,6 @@
 ## Running the chapter code
 
 ```
-cd chapter-code
 cargo run --bin <chapter>
 ```
 

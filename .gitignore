@@ -1,1 +1,5 @@
 book
+
+/target
+.idea
+Cargo.lock
