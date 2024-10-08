@@ -98,7 +98,7 @@ a single integer with the value `12`.
 
 ## From_data and from_iter
 
-In the example above we create a buffer that contains the value `12`, which is of type `i32`.
+In the example above we create a buffer that contains the value `12`, which is of type `i32`,
 but you can put any type you want in a buffer, there is no restriction. In order to give our
 arbitrary types a representation that can be used in a generic way, we use the crate `bytemuck`
 and its "plain old data" trait, `AnyBitPattern`. Thus, any crate which exposes types with
