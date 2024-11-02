@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use vulkano::{
-    instance::{Instance, InstanceCreateInfo, LayerProperties},
+    instance::{Instance, InstanceCreateFlags, InstanceCreateInfo, LayerProperties},
     swapchain::Surface,
 };
 use winit::event_loop::EventLoop;
@@ -24,6 +24,7 @@ pub fn get_instance(event_loop: &EventLoop<()>) -> Arc<Instance> {
     }
 
     let mut create_info = InstanceCreateInfo {
+        flags: InstanceCreateFlags::ENUMERATE_PORTABILITY,
         enabled_extensions: required_extensions,
         ..Default::default()
     };

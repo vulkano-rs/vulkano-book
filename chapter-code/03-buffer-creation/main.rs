@@ -8,7 +8,7 @@ use vulkano::buffer::{Buffer, BufferCreateInfo, BufferUsage};
 use vulkano::command_buffer::allocator::StandardCommandBufferAllocator;
 use vulkano::command_buffer::{AutoCommandBufferBuilder, CommandBufferUsage, CopyBufferInfo};
 use vulkano::device::{Device, DeviceCreateInfo, QueueCreateInfo, QueueFlags};
-use vulkano::instance::{Instance, InstanceCreateInfo};
+use vulkano::instance::{Instance, InstanceCreateFlags, InstanceCreateInfo};
 use vulkano::memory::allocator::{AllocationCreateInfo, MemoryTypeFilter, StandardMemoryAllocator};
 use vulkano::sync::{self, GpuFuture};
 use vulkano::VulkanLibrary;
@@ -16,8 +16,14 @@ use vulkano::VulkanLibrary;
 fn main() {
     // Initialization
     let library = VulkanLibrary::new().expect("no local Vulkan library/DLL");
-    let instance =
-        Instance::new(library, InstanceCreateInfo::default()).expect("failed to create instance");
+    let instance = Instance::new(
+        library,
+        InstanceCreateInfo {
+            flags: InstanceCreateFlags::ENUMERATE_PORTABILITY,
+            ..Default::default()
+        },
+    )
+    .expect("failed to create instance");
 
     let physical_device = instance
         .enumerate_physical_devices()
