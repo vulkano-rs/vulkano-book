@@ -13,11 +13,17 @@ so we can create it with default configurations:
 
 ```rust
 use vulkano::VulkanLibrary;
-use vulkano::instance::{Instance, InstanceCreateInfo};
+use vulkano::instance::{Instance, InstanceCreateFlags, InstanceCreateInfo};
 
 let library = VulkanLibrary::new().expect("no local Vulkan library/DLL");
-let instance = Instance::new(library, InstanceCreateInfo::default())
-    .expect("failed to create instance");
+let instance = Instance::new(
+    library,
+    InstanceCreateInfo {
+        flags: InstanceCreateFlags::ENUMERATE_PORTABILITY,
+        ..Default::default()
+    },
+)
+.expect("failed to create instance");
 ```
 
 Like many other functions in vulkano, creating an instance returns a `Result`. If Vulkan is not
@@ -25,6 +31,10 @@ available on the system, this result will contain an error. For the sake of this
 `expect` on the `Result`, which prints a message to stderr and terminates the application if it
 contains an error. In a real game or application you should handle that situation in a nicer way,
 for example by opening a dialog box with an explanation. This is out of scope of this book.
+
+The `InstanceCreateFlags::ENUMERATE_PORTABILITY` flag is set to support devices, such as those on 
+MacOS and iOS systems, that do not fully conform to the Vulkan Specification. For more details, consult the 
+[instance documentation](https://docs.rs/vulkano/0.34.1/vulkano/instance/index.html#portability-subset-devices-and-the-enumerate_portability-flag).
 
 Before going further you can try your code by running:
 

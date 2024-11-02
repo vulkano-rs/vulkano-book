@@ -28,7 +28,7 @@ that you will need to do is to enable all non-core extensions required to draw a
 pass them on to the instance creation:
 
 ```rust
-use vulkano::instance::{Instance, InstanceCreateInfo};
+use vulkano::instance::{Instance, InstanceCreateFlags, InstanceCreateInfo};
 use vulkano::swapchain::Surface;
 use winit::event_loop::EventLoop;
 
@@ -39,6 +39,7 @@ let required_extensions = Surface::required_extensions(&event_loop);
 let instance = Instance::new(
     library,
     InstanceCreateInfo {
+        flags: InstanceCreateFlags::ENUMERATE_PORTABILITY,
         enabled_extensions: required_extensions,
         ..Default::default()
     },

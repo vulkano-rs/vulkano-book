@@ -16,7 +16,7 @@ use vulkano::device::{
 };
 use vulkano::image::view::ImageView;
 use vulkano::image::{Image, ImageUsage};
-use vulkano::instance::{Instance, InstanceCreateInfo};
+use vulkano::instance::{Instance, InstanceCreateFlags, InstanceCreateInfo};
 use vulkano::memory::allocator::{AllocationCreateInfo, MemoryTypeFilter, StandardMemoryAllocator};
 use vulkano::pipeline::graphics::color_blend::{ColorBlendAttachmentState, ColorBlendState};
 use vulkano::pipeline::graphics::input_assembly::InputAssemblyState;
@@ -243,6 +243,7 @@ fn main() {
     let instance = Instance::new(
         library,
         InstanceCreateInfo {
+            flags: InstanceCreateFlags::ENUMERATE_PORTABILITY,
             enabled_extensions: required_extensions,
             ..Default::default()
         },
