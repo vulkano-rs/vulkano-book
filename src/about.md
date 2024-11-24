@@ -23,7 +23,7 @@ What does vulkano do?
 <br/>
 
 [![Build Status](https://github.com/vulkano-rs/vulkano/workflows/Rust/badge.svg)](https://github.com/vulkano-rs/vulkano/actions?query=workflow%3ARust)
-[![Discord](https://img.shields.io/discord/937149253296476201?label=discord)](https://discord.gg/bncB9W2VDV)
+[![Discord](https://img.shields.io/discord/937149253296476201?label=discord)](https://discord.gg/xjHzXQp8hw)
 [![vulkano github](https://img.shields.io/badge/vulkano-github-lightgrey.svg)](https://github.com/vulkano-rs/vulkano)
 [![vulkano-book github](https://img.shields.io/badge/vulkano--book-github-lightgrey.svg)](https://github.com/vulkano-rs/vulkano-book)
 <br/>
