@@ -8,7 +8,7 @@ As of vulkano version `0.31.0`, the library needs to be explicitly specified by 
 `VulkanLibrary` to the  `Instance` constructor.
 
 For starters, our program will be very simple, so, for now, creating an instance won't need any
-[additional parameters](https://docs.rs/vulkano/0.34.0/vulkano/instance/struct.InstanceCreateInfo.html),
+[additional parameters](https://docs.rs/vulkano/0.35.0/vulkano/instance/struct.InstanceCreateInfo.html),
 so we can create it with default configurations:
 
 ```rust
@@ -33,8 +33,8 @@ contains an error. In a real game or application you should handle that situatio
 for example by opening a dialog box with an explanation. This is out of scope of this book.
 
 The `InstanceCreateFlags::ENUMERATE_PORTABILITY` flag is set to support devices, such as those on 
-MacOS and iOS systems, that do not fully conform to the Vulkan Specification. For more details, consult the 
-[instance documentation](https://docs.rs/vulkano/0.34.1/vulkano/instance/index.html#portability-subset-devices-and-the-enumerate_portability-flag).
+MacOS and iOS systems, that do not fully conform to the Vulkan Specification. For more details, 
+consult the [instance documentation](https://docs.rs/vulkano/0.35.1/vulkano/instance/index.html#portability-subset-devices-and-the-enumerate_portability-flag).
 
 Before going further you can try your code by running:
 

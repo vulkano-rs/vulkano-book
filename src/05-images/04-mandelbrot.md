@@ -162,8 +162,8 @@ Now, let's create the descriptor set by adding the image view, like we did
 
 ```rust
 let layout = compute_pipeline.layout().set_layouts().get(0).unwrap();
-let set = PersistentDescriptorSet::new(
-    &descriptor_set_allocator,
+let set = DescriptorSet::new(
+    descriptor_set_allocator.clone(),
     layout.clone(),
     [WriteDescriptorSet::image_view(0, view.clone())], // 0 is the binding
     [],
@@ -194,7 +194,7 @@ The command buffer contains a dispatch command followed with a copy-image-to-buf
 
 ```rust
 let mut builder = AutoCommandBufferBuilder::primary(
-    &command_buffer_allocator,
+    command_buffer_allocator.clone(),
     queue.queue_family_index(),
     CommandBufferUsage::OneTimeSubmit,
 )
@@ -208,14 +208,13 @@ builder
         0,
         set,
     )
-    .unwrap()
-    .dispatch([1024 / 8, 1024 / 8, 1])
-    .unwrap()
-    .copy_image_to_buffer(CopyImageToBufferInfo::image_buffer(
-        image.clone(),
-        buf.clone(),
-    ))    
     .unwrap();
+
+    unsafe { builder.dispatch([1024 / 8, 1024 / 8, 1]) }.unwarp();
+
+    builder
+        .copy_image_to_buffer(CopyImageToBufferInfo::image_buffer(image, buf.clone()))
+        .unwrap();
 
 let command_buffer = builder.build().unwrap();
 ```

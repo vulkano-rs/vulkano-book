@@ -31,17 +31,19 @@ descriptor set to that slot.
 
 Just like for buffers and command buffers, we also need an allocator for descriptor sets.
 
-For our application, we are going to use a `PersistentDescriptorSet`. When creating this descriptor
+For our application, we are going to use a `DescriptorSet`. When creating this descriptor
 set, we attach to it the result buffer wrapped in a `WriteDescriptorSet`. This object will describe
 how will the buffer be written:
 
 ```rust
 use vulkano::pipeline::Pipeline;
-use vulkano::descriptor_set::{PersistentDescriptorSet, WriteDescriptorSet};
+use vulkano::descriptor_set::{DescriptorSet, WriteDescriptorSet};
 use vulkano::descriptor_set::allocator::StandardDescriptorSetAllocator;
 
-let descriptor_set_allocator =
-    StandardDescriptorSetAllocator::new(device.clone(), Default::default());
+let descriptor_set_allocator = Arc::new(StandardDescriptorSetAllocator::new(
+    device.clone(),
+    Default::default(),
+));
 let pipeline_layout = compute_pipeline.layout();
 let descriptor_set_layouts = pipeline_layout.set_layouts();
 
@@ -49,8 +51,8 @@ let descriptor_set_layout_index = 0;
 let descriptor_set_layout = descriptor_set_layouts
     .get(descriptor_set_layout_index)
     .unwrap();
-let descriptor_set = PersistentDescriptorSet::new(
-    &descriptor_set_allocator,
+let descriptor_set = DescriptorSet::new(
+    descriptor_set_allocator.clone(),
     descriptor_set_layout.clone(),
     [WriteDescriptorSet::buffer(0, data_buffer.clone())], // 0 is the binding
     [],
