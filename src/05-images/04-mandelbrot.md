@@ -210,7 +210,7 @@ builder
     )
     .unwrap();
 
-    unsafe { builder.dispatch([1024 / 8, 1024 / 8, 1]) }.unwarp();
+    unsafe { builder.dispatch([1024 / 8, 1024 / 8, 1]) }.unwrap();
 
     builder
         .copy_image_to_buffer(CopyImageToBufferInfo::image_buffer(image, buf.clone()))
