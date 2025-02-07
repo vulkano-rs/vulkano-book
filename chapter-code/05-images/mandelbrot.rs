@@ -12,7 +12,7 @@ use vulkano::command_buffer::{
     AutoCommandBufferBuilder, CommandBufferUsage, CopyImageToBufferInfo,
 };
 use vulkano::descriptor_set::allocator::StandardDescriptorSetAllocator;
-use vulkano::descriptor_set::{PersistentDescriptorSet, WriteDescriptorSet};
+use vulkano::descriptor_set::{DescriptorSet, WriteDescriptorSet};
 use vulkano::device::{Device, DeviceCreateInfo, QueueCreateInfo, QueueFlags};
 use vulkano::format::Format;
 use vulkano::image::view::ImageView;
@@ -138,12 +138,14 @@ pub fn main() {
 
     let view = ImageView::new_default(image.clone()).unwrap();
 
-    let descriptor_set_allocator =
-        StandardDescriptorSetAllocator::new(device.clone(), Default::default());
+    let descriptor_set_allocator = Arc::new(StandardDescriptorSetAllocator::new(
+        device.clone(),
+        Default::default(),
+    ));
 
     let layout = compute_pipeline.layout().set_layouts().get(0).unwrap();
-    let set = PersistentDescriptorSet::new(
-        &descriptor_set_allocator,
+    let set = DescriptorSet::new(
+        descriptor_set_allocator.clone(),
         layout.clone(),
         [WriteDescriptorSet::image_view(0, view)], // 0 is the binding
         [],
@@ -165,11 +167,13 @@ pub fn main() {
     )
     .expect("failed to create buffer");
 
-    let command_buffer_allocator =
-        StandardCommandBufferAllocator::new(device.clone(), Default::default());
+    let command_buffer_allocator = Arc::new(StandardCommandBufferAllocator::new(
+        device.clone(),
+        Default::default(),
+    ));
 
     let mut builder = AutoCommandBufferBuilder::primary(
-        &command_buffer_allocator,
+        command_buffer_allocator.clone(),
         queue.queue_family_index(),
         CommandBufferUsage::OneTimeSubmit,
     )
@@ -183,9 +187,11 @@ pub fn main() {
             0,
             set,
         )
-        .unwrap()
-        .dispatch([1024 / 8, 1024 / 8, 1])
-        .unwrap()
+        .unwrap();
+
+    unsafe { builder.dispatch([1024 / 8, 1024 / 8, 1]) }.unwrap();
+
+    builder
         .copy_image_to_buffer(CopyImageToBufferInfo::image_buffer(image, buf.clone()))
         .unwrap();
 

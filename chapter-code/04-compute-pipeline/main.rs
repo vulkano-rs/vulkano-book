@@ -10,7 +10,7 @@ use vulkano::command_buffer::allocator::{
 };
 use vulkano::command_buffer::{AutoCommandBufferBuilder, CommandBufferUsage};
 use vulkano::descriptor_set::allocator::StandardDescriptorSetAllocator;
-use vulkano::descriptor_set::{PersistentDescriptorSet, WriteDescriptorSet};
+use vulkano::descriptor_set::{DescriptorSet, WriteDescriptorSet};
 use vulkano::device::{Device, DeviceCreateInfo, DeviceExtensions, QueueCreateInfo, QueueFlags};
 use vulkano::instance::{Instance, InstanceCreateFlags, InstanceCreateInfo};
 use vulkano::memory::allocator::{AllocationCreateInfo, MemoryTypeFilter, StandardMemoryAllocator};
@@ -127,8 +127,10 @@ fn main() {
     )
     .expect("failed to create compute pipeline");
 
-    let descriptor_set_allocator =
-        StandardDescriptorSetAllocator::new(device.clone(), Default::default());
+    let descriptor_set_allocator = Arc::new(StandardDescriptorSetAllocator::new(
+        device.clone(),
+        Default::default(),
+    ));
 
     let pipeline_layout = compute_pipeline.layout();
     let descriptor_set_layouts = pipeline_layout.set_layouts();
@@ -137,21 +139,21 @@ fn main() {
         .get(descriptor_set_layout_index)
         .unwrap();
 
-    let descriptor_set = PersistentDescriptorSet::new(
-        &descriptor_set_allocator,
+    let descriptor_set = DescriptorSet::new(
+        descriptor_set_allocator.clone(),
         descriptor_set_layout.clone(),
         [WriteDescriptorSet::buffer(0, data_buffer.clone())], // 0 is the binding
         [],
     )
     .unwrap();
 
-    let command_buffer_allocator = StandardCommandBufferAllocator::new(
+    let command_buffer_allocator = Arc::new(StandardCommandBufferAllocator::new(
         device.clone(),
         StandardCommandBufferAllocatorCreateInfo::default(),
-    );
+    ));
 
     let mut command_buffer_builder = AutoCommandBufferBuilder::primary(
-        &command_buffer_allocator,
+        command_buffer_allocator.clone(),
         queue.queue_family_index(),
         CommandBufferUsage::OneTimeSubmit,
     )
@@ -168,9 +170,9 @@ fn main() {
             descriptor_set_layout_index as u32,
             descriptor_set,
         )
-        .unwrap()
-        .dispatch(work_group_counts)
         .unwrap();
+
+    unsafe { command_buffer_builder.dispatch(work_group_counts) }.unwrap();
 
     let command_buffer = command_buffer_builder.build().unwrap();
 
