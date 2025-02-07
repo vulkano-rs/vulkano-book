@@ -42,6 +42,10 @@ use winit::event::WindowEvent;
 use winit::event_loop::EventLoop;
 use winit::window::Window;
 
+pub type Fence = FenceSignalFuture<
+    PresentFuture<CommandBufferExecFuture<JoinFuture<Box<dyn GpuFuture>, SwapchainAcquireFuture>>>,
+>;
+
 #[derive(BufferContents, Vertex)]
 #[repr(C)]
 struct MyVertex {
@@ -266,19 +270,7 @@ struct RenderContext {
     viewport: Viewport,
     recreate_swapchain: bool,
     window_resized: bool,
-    fences: Vec<
-        Option<
-            Arc<
-                FenceSignalFuture<
-                    PresentFuture<
-                        CommandBufferExecFuture<
-                            JoinFuture<Box<dyn GpuFuture>, SwapchainAcquireFuture>,
-                        >,
-                    >,
-                >,
-            >,
-        >,
-    >,
+    fences: Vec<Option<Arc<Fence>>>,
     previous_fence_i: u32,
 }
 
