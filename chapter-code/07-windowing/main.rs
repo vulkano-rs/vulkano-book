@@ -8,8 +8,8 @@ use std::sync::Arc;
 use vulkano::buffer::{Buffer, BufferContents, BufferCreateInfo, BufferUsage, Subbuffer};
 use vulkano::command_buffer::allocator::StandardCommandBufferAllocator;
 use vulkano::command_buffer::{
-    AutoCommandBufferBuilder, CommandBufferExecFuture, CommandBufferUsage,
-    PrimaryAutoCommandBuffer, RenderPassBeginInfo, SubpassBeginInfo, SubpassContents,
+    AutoCommandBufferBuilder, CommandBufferUsage, RenderPassBeginInfo, SubpassBeginInfo,
+    SubpassContents,
 };
 use vulkano::device::physical::{PhysicalDevice, PhysicalDeviceType};
 use vulkano::device::{
@@ -30,21 +30,13 @@ use vulkano::pipeline::layout::PipelineDescriptorSetLayoutCreateInfo;
 use vulkano::pipeline::{GraphicsPipeline, PipelineLayout, PipelineShaderStageCreateInfo};
 use vulkano::render_pass::{Framebuffer, FramebufferCreateInfo, RenderPass, Subpass};
 use vulkano::shader::ShaderModule;
-use vulkano::swapchain::{
-    self, PresentFuture, Surface, Swapchain, SwapchainAcquireFuture, SwapchainCreateInfo,
-    SwapchainPresentInfo,
-};
-use vulkano::sync::future::{FenceSignalFuture, JoinFuture};
+use vulkano::swapchain::{self, Surface, Swapchain, SwapchainCreateInfo, SwapchainPresentInfo};
 use vulkano::sync::{self, GpuFuture};
 use vulkano::{Validated, VulkanError};
 use winit::application::ApplicationHandler;
 use winit::event::WindowEvent;
 use winit::event_loop::EventLoop;
 use winit::window::Window;
-
-pub type Fence = FenceSignalFuture<
-    PresentFuture<CommandBufferExecFuture<JoinFuture<Box<dyn GpuFuture>, SwapchainAcquireFuture>>>,
->;
 
 #[derive(BufferContents, Vertex)]
 #[repr(C)]
@@ -199,49 +191,6 @@ fn get_pipeline(
     .unwrap()
 }
 
-fn get_command_buffers(
-    command_buffer_allocator: Arc<StandardCommandBufferAllocator>,
-    queue: &Arc<Queue>,
-    pipeline: &Arc<GraphicsPipeline>,
-    framebuffers: &[Arc<Framebuffer>],
-    vertex_buffer: &Subbuffer<[MyVertex]>,
-) -> Vec<Arc<PrimaryAutoCommandBuffer>> {
-    framebuffers
-        .iter()
-        .map(|framebuffer| {
-            let mut builder = AutoCommandBufferBuilder::primary(
-                command_buffer_allocator.clone(),
-                queue.queue_family_index(),
-                CommandBufferUsage::MultipleSubmit,
-            )
-            .unwrap();
-
-            builder
-                .begin_render_pass(
-                    RenderPassBeginInfo {
-                        clear_values: vec![Some([0.0, 0.0, 1.0, 1.0].into())],
-                        ..RenderPassBeginInfo::framebuffer(framebuffer.clone())
-                    },
-                    SubpassBeginInfo {
-                        contents: SubpassContents::Inline,
-                        ..Default::default()
-                    },
-                )
-                .unwrap()
-                .bind_pipeline_graphics(pipeline.clone())
-                .unwrap()
-                .bind_vertex_buffers(0, vertex_buffer.clone())
-                .unwrap();
-
-            unsafe { builder.draw(vertex_buffer.len() as u32, 1, 0, 0) }.unwrap();
-
-            builder.end_render_pass(Default::default()).unwrap();
-
-            builder.build().unwrap()
-        })
-        .collect()
-}
-
 fn main() -> Result<(), impl Error> {
     let event_loop = EventLoop::new().unwrap();
     let mut app = App::new(&event_loop);
@@ -266,12 +215,9 @@ struct RenderContext {
     vs: Arc<ShaderModule>,
     fs: Arc<ShaderModule>,
     pipeline: Arc<GraphicsPipeline>,
-    command_buffers: Vec<Arc<PrimaryAutoCommandBuffer>>,
     viewport: Viewport,
     recreate_swapchain: bool,
-    window_resized: bool,
-    fences: Vec<Option<Arc<Fence>>>,
-    previous_fence_i: u32,
+    previous_future: Option<Box<dyn GpuFuture>>,
 }
 
 impl App {
@@ -416,16 +362,7 @@ impl ApplicationHandler for App {
             viewport.clone(),
         );
 
-        let command_buffers = get_command_buffers(
-            self.command_buffer_allocator.clone(),
-            &self.queue,
-            &pipeline,
-            &framebuffers,
-            &self.vertex_buffer,
-        );
-
-        let frames_in_flight = images.len();
-        let fences: Vec<Option<Arc<FenceSignalFuture<_>>>> = vec![None; frames_in_flight];
+        let previous_future = Some(sync::now(self.device.clone()).boxed());
 
         self.rcx = Some(RenderContext {
             window,
@@ -437,10 +374,7 @@ impl ApplicationHandler for App {
             pipeline,
             viewport,
             recreate_swapchain: false,
-            window_resized: false,
-            command_buffers,
-            fences,
-            previous_fence_i: 0,
+            previous_future,
         });
     }
 
@@ -457,7 +391,7 @@ impl ApplicationHandler for App {
                 event_loop.exit();
             }
             WindowEvent::Resized(_) => {
-                rcx.window_resized = true;
+                rcx.recreate_swapchain = true;
             }
             WindowEvent::RedrawRequested => {
                 let window_size = rcx.window.inner_size();
@@ -466,7 +400,9 @@ impl ApplicationHandler for App {
                     return;
                 }
 
-                if rcx.window_resized || rcx.recreate_swapchain {
+                rcx.previous_future.as_mut().unwrap().cleanup_finished();
+
+                if rcx.recreate_swapchain {
                     rcx.recreate_swapchain = false;
 
                     let (new_swapchain, new_images) = rcx
@@ -480,25 +416,14 @@ impl ApplicationHandler for App {
                     rcx.swapchain = new_swapchain;
                     rcx.framebuffers = get_framebuffers(&new_images, rcx.render_pass.clone());
 
-                    if rcx.window_resized {
-                        rcx.window_resized = false;
-
-                        rcx.viewport.extent = window_size.into();
-                        rcx.pipeline = get_pipeline(
-                            self.device.clone(),
-                            rcx.vs.clone(),
-                            rcx.fs.clone(),
-                            rcx.render_pass.clone(),
-                            rcx.viewport.clone(),
-                        );
-                        rcx.command_buffers = get_command_buffers(
-                            self.command_buffer_allocator.clone(),
-                            &self.queue,
-                            &rcx.pipeline,
-                            &rcx.framebuffers,
-                            &self.vertex_buffer,
-                        );
-                    }
+                    rcx.viewport.extent = window_size.into();
+                    rcx.pipeline = get_pipeline(
+                        self.device.clone(),
+                        rcx.vs.clone(),
+                        rcx.fs.clone(),
+                        rcx.render_pass.clone(),
+                        rcx.viewport.clone(),
+                    );
                 }
 
                 let (image_i, suboptimal, acquire_future) =
@@ -517,29 +442,44 @@ impl ApplicationHandler for App {
                     rcx.recreate_swapchain = true;
                 }
 
-                // wait for the fence related to this image to finish (normally this would be the oldest fence)
-                if let Some(image_fence) = &rcx.fences[image_i as usize] {
-                    image_fence.wait(None).unwrap();
-                }
+                let mut builder = AutoCommandBufferBuilder::primary(
+                    self.command_buffer_allocator.clone(),
+                    self.queue.queue_family_index(),
+                    CommandBufferUsage::MultipleSubmit,
+                )
+                .unwrap();
 
-                let previous_future = match rcx.fences[rcx.previous_fence_i as usize].clone() {
-                    // Create a NowFuture
-                    None => {
-                        let mut now = sync::now(self.device.clone());
-                        now.cleanup_finished();
-
-                        now.boxed()
-                    }
-                    // Use the existing FenceSignalFuture
-                    Some(fence) => fence.boxed(),
-                };
-
-                let future = previous_future
-                    .join(acquire_future)
-                    .then_execute(
-                        self.queue.clone(),
-                        rcx.command_buffers[image_i as usize].clone(),
+                builder
+                    .begin_render_pass(
+                        RenderPassBeginInfo {
+                            clear_values: vec![Some([0.0, 0.0, 1.0, 1.0].into())],
+                            ..RenderPassBeginInfo::framebuffer(
+                                rcx.framebuffers[image_i as usize].clone(),
+                            )
+                        },
+                        SubpassBeginInfo {
+                            contents: SubpassContents::Inline,
+                            ..Default::default()
+                        },
                     )
+                    .unwrap()
+                    .bind_pipeline_graphics(rcx.pipeline.clone())
+                    .unwrap()
+                    .bind_vertex_buffers(0, self.vertex_buffer.clone())
+                    .unwrap();
+
+                unsafe { builder.draw(self.vertex_buffer.len() as u32, 1, 0, 0) }.unwrap();
+
+                builder.end_render_pass(Default::default()).unwrap();
+
+                let command_buffer = builder.build().unwrap();
+
+                let future = rcx
+                    .previous_future
+                    .take()
+                    .unwrap()
+                    .join(acquire_future)
+                    .then_execute(self.queue.clone(), command_buffer)
                     .unwrap()
                     .then_swapchain_present(
                         self.queue.clone(),
@@ -547,19 +487,18 @@ impl ApplicationHandler for App {
                     )
                     .then_signal_fence_and_flush();
 
-                rcx.fences[image_i as usize] = match future.map_err(Validated::unwrap) {
-                    Ok(value) => Some(Arc::new(value)),
+                match future.map_err(Validated::unwrap) {
+                    Ok(future) => {
+                        rcx.previous_future = Some(future.boxed());
+                    }
                     Err(VulkanError::OutOfDate) => {
                         rcx.recreate_swapchain = true;
-                        None
+                        rcx.previous_future = Some(sync::now(self.device.clone()).boxed());
                     }
                     Err(e) => {
-                        println!("failed to flush future: {e}");
-                        None
+                        panic!("failed to flush future: {e}");
                     }
                 };
-
-                rcx.previous_fence_i = image_i;
             }
             _ => (),
         }
