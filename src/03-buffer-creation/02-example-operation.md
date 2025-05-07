@@ -57,19 +57,19 @@ while the destination buffer contains sixty-four 0s.
 
 Just like buffers, you need an allocator to allocate several command buffers, but you cannot use
 a memory allocator. You have to use a [command buffer 
-allocator](https://docs.rs/vulkano/0.34.0/vulkano/command_buffer/allocator/trait.CommandBufferAllocator.html).
+allocator](https://docs.rs/vulkano/0.35.0/vulkano/command_buffer/allocator/trait.CommandBufferAllocator.html).
 In this case we just use the [standard 
-one](https://docs.rs/vulkano/0.34.0/vulkano/command_buffer/allocator/struct.StandardCommandBufferAllocator.html).
+one](https://docs.rs/vulkano/0.35.0/vulkano/command_buffer/allocator/struct.StandardCommandBufferAllocator.html).
 
 ```rust
 use vulkano::command_buffer::allocator::{
     StandardCommandBufferAllocator, StandardCommandBufferAllocatorCreateInfo,
 };
 
-let command_buffer_allocator = StandardCommandBufferAllocator::new(
+let command_buffer_allocator = Arc::new(StandardCommandBufferAllocator::new(
     device.clone(),
-    StandardCommandBufferAllocatorCreateInfo::default(),
-);
+    Default::default(),
+));
 ```
 
 ## Creating command buffers
@@ -88,7 +88,7 @@ operation we are trying to achieve.
 Vulkan supports primary and secondary command buffers. Primary command buffers can be sent directly 
 to the GPU while secondary command buffers allow you to store functionality that you can reuse 
 multiple times in primary command buffers. We won't cover secondary command buffers here, but you 
-can read [more about them](https://docs.rs/vulkano/0.34.0/vulkano/command_buffer/index.html).
+can read [more about them](https://docs.rs/vulkano/0.35.0/vulkano/command_buffer/index.html).
 
 > **Note**: Submitting a command to the GPU can take up to several hundred microseconds, which is
 > why we submit as many things as we can at once.
@@ -103,7 +103,7 @@ We are going to submit the commands to the GPU, so let's create a primary comman
 use vulkano::command_buffer::{AutoCommandBufferBuilder, CommandBufferUsage, CopyBufferInfo};
 
 let mut builder = AutoCommandBufferBuilder::primary(
-    &command_buffer_allocator,
+    command_buffer_allocator.clone(),
     queue_family_index,
     CommandBufferUsage::OneTimeSubmit,
 )
@@ -176,7 +176,7 @@ let future = sync::now(device.clone())
 ```
 
 Signaling a fence returns a future object called
-[`FenceSignalFuture`](https://docs.rs/vulkano/0.34.0/vulkano/sync/future/struct.FenceSignalFuture.html),
+[`FenceSignalFuture`](https://docs.rs/vulkano/0.35.0/vulkano/sync/future/struct.FenceSignalFuture.html),
 that has a special method `.wait()`:
 
 ```rust

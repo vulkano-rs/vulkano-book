@@ -19,7 +19,7 @@ use vulkano::command_buffer::ClearColorImageInfo;
 use vulkano::format::ClearColorValue;
 
 let mut builder = AutoCommandBufferBuilder::primary(
-    &command_buffer_allocator,
+    command_buffer_allocator.clone(),
     queue.queue_family_index(),
     CommandBufferUsage::OneTimeSubmit,
 )
@@ -40,7 +40,7 @@ let command_buffer = builder.build().unwrap();
 
 ## Normalized components
 
-[The `ClearColorValue` enum](https://docs.rs/vulkano/0.34.0/vulkano/format/enum.ClearColorValue.html) indicates
+[The `ClearColorValue` enum](https://docs.rs/vulkano/0.35.0/vulkano/format/enum.ClearColorValue.html) indicates
 which color to fill the image with. Depending on the format of the image, we have to use the right
 enum variant of `ClearValue`.
 

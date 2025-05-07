@@ -104,7 +104,7 @@ use vulkano::command_buffer::{
 };
 
 let mut builder = AutoCommandBufferBuilder::primary(
-    &command_buffer_allocator,
+    command_buffer_allocator.clone(),
     queue.queue_family_index(),
     CommandBufferUsage::OneTimeSubmit,
 )
