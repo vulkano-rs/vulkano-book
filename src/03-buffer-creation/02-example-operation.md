@@ -15,7 +15,7 @@ The first step is to create two CPU-accessible buffers: the source and the desti
 covered in [the previous section](01-buffer-creation.html).
 
 ```rust
-let source_content: Vec<i32> = (0..64).collect();
+let source_content = 0..64;
 let source = Buffer::from_iter(
     memory_allocator.clone(),
     BufferCreateInfo {
@@ -31,7 +31,7 @@ let source = Buffer::from_iter(
 )
 .expect("failed to create source buffer");
 
-let destination_content: Vec<i32> = (0..64).map(|_| 0).collect();
+let destination_content = (0..64).map(|_| 0);
 let destination = Buffer::from_iter(
     memory_allocator.clone(),
     BufferCreateInfo {

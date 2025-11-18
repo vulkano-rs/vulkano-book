@@ -57,7 +57,7 @@ fn main() {
     let memory_allocator = Arc::new(StandardMemoryAllocator::new_default(device.clone()));
 
     // Example operation
-    let source_content: Vec<i32> = (0..64).collect();
+    let source_content = 0..64;
     let source = Buffer::from_iter(
         memory_allocator.clone(),
         BufferCreateInfo {
@@ -73,7 +73,7 @@ fn main() {
     )
     .expect("failed to create source buffer");
 
-    let destination_content: Vec<i32> = (0..64).map(|_| 0).collect();
+    let destination_content = (0..64).map(|_| 0);
     let destination = Buffer::from_iter(
         memory_allocator.clone(),
         BufferCreateInfo {
