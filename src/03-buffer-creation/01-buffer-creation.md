@@ -1,10 +1,10 @@
 # Creating a memory allocator
 
 Before you can create buffers in memory, you have to request (allocate) some memory first.
-It turns out [allocating memory](https://docs.rs/vulkano/0.34.0/vulkano/memory/allocator/index.html) 
+It turns out [allocating memory](https://docs.rs/vulkano/0.35.0/vulkano/memory/allocator/index.html) 
 efficiently and dynamically is challenging. Luckily, in vulkano, we have several kinds of memory 
 allocators that we can pick from depending on our use case. Since we don't have any special needs, 
-we can use the [`StandardMemoryAllocator`](https://docs.rs/vulkano/0.34.0/vulkano/memory/allocator/type.StandardMemoryAllocator.html) 
+we can use the [`StandardMemoryAllocator`](https://docs.rs/vulkano/0.35.0/vulkano/memory/allocator/type.StandardMemoryAllocator.html) 
 with default settings, that kind of allocator is general-purpose and will be your go-to option in 
 most cases.
 
@@ -73,13 +73,13 @@ memory allocator to use.
 
 The second parameter is the create info for the buffer. The only field that you have to override
 is [the usage for which we are creating the
-buffer](https://docs.rs/vulkano/0.34.0/vulkano/buffer/struct.BufferUsage.html) for, which can help 
+buffer](https://docs.rs/vulkano/0.35.0/vulkano/buffer/struct.BufferUsage.html) for, which can help 
 the implementation perform some optimizations. Trying to use a buffer in a way that wasn't 
 indicated when creating it will result in an error. For the sake of the example, we just create a 
 buffer that supports being used as a uniform buffer.
 
 The third parameter is the create info for the allocation. The field of interest is [the memory 
-type filter](https://docs.rs/vulkano/0.34.0/vulkano/memory/allocator/struct.MemoryTypeFilter.html). 
+type filter](https://docs.rs/vulkano/0.35.0/vulkano/memory/allocator/struct.MemoryTypeFilter.html). 
 When creating a CPU-accessible buffer, you will most commonly use 
 `MemoryTypeFilter::PREFER_HOST | MemoryTypeFilter::HOST_SEQUENTIAL_WRITE`, but in cases 
 where the application is writing data through this buffer continuously, using 

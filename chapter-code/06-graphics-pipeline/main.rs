@@ -200,9 +200,7 @@ fn main() {
         let vs = vs.entry_point("main").unwrap();
         let fs = fs.entry_point("main").unwrap();
 
-        let vertex_input_state = MyVertex::per_vertex()
-            .definition(&vs.info().input_interface)
-            .unwrap();
+        let vertex_input_state = MyVertex::per_vertex().definition(&vs).unwrap();
 
         let stages = [
             PipelineShaderStageCreateInfo::new(vs),
@@ -243,11 +241,13 @@ fn main() {
         .unwrap()
     };
 
-    let command_buffer_allocator =
-        StandardCommandBufferAllocator::new(device.clone(), Default::default());
+    let command_buffer_allocator = Arc::new(StandardCommandBufferAllocator::new(
+        device.clone(),
+        Default::default(),
+    ));
 
     let mut builder = AutoCommandBufferBuilder::primary(
-        &command_buffer_allocator,
+        command_buffer_allocator.clone(),
         queue.queue_family_index(),
         CommandBufferUsage::OneTimeSubmit,
     )
@@ -268,11 +268,16 @@ fn main() {
         .bind_pipeline_graphics(pipeline)
         .unwrap()
         .bind_vertex_buffers(0, vertex_buffer)
-        .unwrap()
-        .draw(
+        .unwrap();
+
+    unsafe {
+        builder.draw(
             3, 1, 0, 0, // 3 is the number of vertices, 1 is the number of instances
         )
-        .unwrap()
+    }
+    .unwrap();
+
+    builder
         .end_render_pass(Default::default())
         .unwrap()
         .copy_image_to_buffer(CopyImageToBufferInfo::image_buffer(image, buf.clone()))

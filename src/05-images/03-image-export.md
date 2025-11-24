@@ -79,7 +79,7 @@ file. The Rust ecosystem has a crate named `image` that can do this.
 Let's add it to our Cargo.toml:
 
 ```toml
-image = "0.24"
+image = "0.25"
 ```
 
 In this library the main type that represents an image is the `ImageBuffer`. It can be created

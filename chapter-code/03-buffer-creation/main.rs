@@ -89,11 +89,13 @@ fn main() {
     )
     .expect("failed to create destination buffer");
 
-    let command_buffer_allocator =
-        StandardCommandBufferAllocator::new(device.clone(), Default::default());
+    let command_buffer_allocator = Arc::new(StandardCommandBufferAllocator::new(
+        device.clone(),
+        Default::default(),
+    ));
 
     let mut builder = AutoCommandBufferBuilder::primary(
-        &command_buffer_allocator,
+        command_buffer_allocator.clone(),
         queue_family_index,
         CommandBufferUsage::OneTimeSubmit,
     )

@@ -125,7 +125,7 @@ To use `vulkano-shaders`, we first have to add a dependency:
 
 ```toml
 # Notice that it uses the same version as vulkano
-vulkano-shaders = "0.34.0"
+vulkano-shaders = "0.35.0"
 ```
 
 > **Note**: `vulkano-shaders` uses the crate `shaderc-sys` for the actual GLSL compilation step. 

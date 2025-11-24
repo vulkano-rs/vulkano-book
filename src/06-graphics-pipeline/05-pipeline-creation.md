@@ -79,9 +79,7 @@ let pipeline = {
     let vs = vs.entry_point("main").unwrap();
     let fs = fs.entry_point("main").unwrap();
 
-    let vertex_input_state = MyVertex::per_vertex()
-        .definition(&vs.info().input_interface)
-        .unwrap();
+    let vertex_input_state = MyVertex::per_vertex().definition(&vs).unwrap();
 
     let stages = [
         PipelineShaderStageCreateInfo::new(vs),
@@ -155,7 +153,7 @@ To draw the triangle, we need to pass the pipeline, the vertex_buffer and the ac
 
 ```rust
 let mut builder = AutoCommandBufferBuilder::primary(
-    &command_buffer_allocator,
+    command_buffer_allocator.clone(),
     queue.queue_family_index(),
     CommandBufferUsage::OneTimeSubmit,
 )
@@ -178,12 +176,16 @@ builder
     .bind_pipeline_graphics(pipeline.clone())
     .unwrap()
     .bind_vertex_buffers(0, vertex_buffer.clone())
-    .unwrap()
-    .draw(
+    .unwrap();
+
+unsafe {
+    builder.draw(
         3, 1, 0, 0, // 3 is the number of vertices, 1 is the number of instances
     )
-    .unwrap()
+}
+.unwrap();
 
+builder
     .end_render_pass(SubpassEndInfo::default())
     .unwrap()
 

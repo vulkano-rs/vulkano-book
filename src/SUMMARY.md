@@ -10,7 +10,7 @@
   - [Introduction](01-introduction/01-introduction.md)
 
 - [Initialization]()
-  - [Intialization](02-initialization/01-initialization.md)
+  - [Initialization](02-initialization/01-initialization.md)
   - [Device creation](02-initialization/02-device-creation.md)
 
 - [Buffer creation]()

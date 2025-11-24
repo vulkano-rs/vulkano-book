@@ -13,13 +13,13 @@ use vulkano::command_buffer::allocator::{
 use vulkano::command_buffer::{AutoCommandBufferBuilder, CommandBufferUsage};
 use vulkano::pipeline::PipelineBindPoint;
 
-let command_buffer_allocator = StandardCommandBufferAllocator::new(
+let command_buffer_allocator = Arc::new(StandardCommandBufferAllocator::new(
     device.clone(),
     StandardCommandBufferAllocatorCreateInfo::default(),
-);
+));
 
 let mut command_buffer_builder = AutoCommandBufferBuilder::primary(
-    &command_buffer_allocator,
+    command_buffer_allocator.clone(),
     queue.queue_family_index(),
     CommandBufferUsage::OneTimeSubmit,
 )
@@ -36,10 +36,10 @@ command_buffer_builder
         descriptor_set_layout_index as u32,
         descriptor_set,
     )
-    .unwrap()
-    .dispatch(work_group_counts)
     .unwrap();
 
+unsafe { command_buffer_builder.dispatch(work_group_counts) }.unwrap();
+    
 let command_buffer = command_buffer_builder.build().unwrap();
 ```
 
